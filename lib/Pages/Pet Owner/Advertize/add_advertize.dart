@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/main.dart';
 
 class AddAdvertizePage extends StatefulWidget {
   const AddAdvertizePage({super.key});
@@ -11,6 +10,7 @@ class AddAdvertizePage extends StatefulWidget {
 }
 
 class _AddAdvertizePageState extends State<AddAdvertizePage> {
+  String? selectedAdres;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,47 +19,37 @@ class _AddAdvertizePageState extends State<AddAdvertizePage> {
       ),
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
-                children: [
-                  Text("İlanın olacağı adres: "),
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("users")
-                        .doc(FirebaseAuth.instance.currentUser!.uid)
-                        .collection("User Adress")
-                        .snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData) {
-                        return const CircularProgressIndicator.adaptive();
-                      } else {
-                        return DropdownButton(
-                          onChanged: (value) {},
-                          items: List.of(
-                            List.from(
-                              snapshot.data!.docs.map((document) {
-                                return document["Title"];
-                              }).toList(),
+          child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("User Adress")
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return const CircularProgressIndicator.adaptive();
+                } else {
+                  return DropdownButton(
+                    items: snapshot.data!.docs
+                        .map(
+                          (document) => DropdownMenuItem(
+                            child: Text(
+                              document["Title"],
                             ),
+                            value: document.id,
                           ),
-                        );
-                      }
+                        )
+                        .toList(),
+                    value: selectedAdres,
+                    onChanged: (newValue) {
+                      setState(() {
+                        print(newValue);
+                        selectedAdres = newValue;
+                      });
                     },
-                  ),
-                ],
-              ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    "İlan ver",
-                    style: TextStyle(fontSize: 20),
-                  ))
-            ],
-          ),
+                  );
+                }
+              }),
         ),
       ),
     );
