@@ -91,11 +91,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                         child: Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.pets,
                               color: Colors.white,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 30,
                             ),
                             Text("Dostlar", style: myStyle),
@@ -119,11 +119,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                         child: Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.location_city,
                               color: Colors.white,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 30,
                             ),
                             Text("Adres Bilgileri", style: myStyle),
@@ -147,11 +147,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {},
                         child: Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.system_security_update_warning,
                               color: Colors.white,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 30,
                             ),
                             Text("Yasal Bilgilendirme", style: myStyle),
@@ -168,11 +168,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {},
                         child: Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.mail,
                               color: Colors.white,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 30,
                             ),
                             Text("İstek ve Şikayet", style: myStyle),

@@ -88,13 +88,13 @@ class _AdressPageState extends State<AdressPage> {
                                       flex: 1,
                                       child: Text(
                                         document["Title"],
-                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        "${document["Street"].toString().toTitleCase}, ${document["Apartment No"]}, ${document["Door No"]} \n${document["Neighbourhood"]}  \n${document["District"].toString().capitalize}/${document["City"].toString().toUpperCase()} \ \nNot: ${document["Note"]} ",
+                                        "${document["Street"].toString().toTitleCase}, \n${document["Apartment No"]}, ${document["Door No"]} \n${document["Neighbourhood"]}  \n${document["District"].toString().capitalize}/${document["City"].toString().toUpperCase()}  \nNot: ${document["Note"]} ",
                                         style: const TextStyle(fontSize: 15),
                                         maxLines: 4,
                                       ),

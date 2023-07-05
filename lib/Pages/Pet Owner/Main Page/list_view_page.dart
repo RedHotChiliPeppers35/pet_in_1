@@ -216,7 +216,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
                                   width: 200,
                                   child: Text(
                                     "Hoşgeldin $userFirstName",
-                                    style: TextStyle(fontSize: 20),
+                                    style: const TextStyle(fontSize: 20),
                                     overflow: TextOverflow.fade,
                                   ),
                                 ),

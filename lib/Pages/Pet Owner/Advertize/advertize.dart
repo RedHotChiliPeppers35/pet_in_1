@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/add_advertize.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/add_adress_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet_add_page.dart';
+import 'package:flutter_application_1/Pages/constants.dart';
 import 'package:flutter_application_1/main.dart';
 
 class AdvertizePage extends StatefulWidget {
@@ -58,15 +63,77 @@ class _AdvertizePageState extends State<AdvertizePage> {
                           height: 30,
                         ),
                         TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              CupertinoModalPopupRoute(
-                                builder: (context) {
-                                  return AddAdvertizePage();
-                                },
-                              ),
-                            );
+                          onPressed: () async {
+                            DocumentReference collectionReference = FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(FirebaseAuth.instance.currentUser!.uid);
+
+                            QuerySnapshot adressSnapshot =
+                                await collectionReference.collection("User Adress").get();
+
+                            QuerySnapshot petSnapshot =
+                                await collectionReference.collection("User Pets").get();
+                            if (adressSnapshot.docs.isEmpty) {
+                              // ignore: use_build_context_synchronously
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => CupertinoAlertDialog(
+                                  content: const Text("Adres eklemeden ilan veremezsiniz",
+                                      style: TextStyle(fontSize: 18)),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          CupertinoDialogRoute(
+                                              builder: (context) => const AddAdressPage(),
+                                              context: context),
+                                        );
+                                      },
+                                      child: const Text(
+                                        "Adres Ekle",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else if (petSnapshot.docs.isEmpty) {
+                              // ignore: use_build_context_synchronously
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => CupertinoAlertDialog(
+                                  content: const Text("Dost eklemeden ilan veremezsiniz",
+                                      style: TextStyle(fontSize: 18)),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          CupertinoDialogRoute(
+                                              builder: (context) => const PetAddPage(),
+                                              context: context),
+                                        );
+                                      },
+                                      child:
+                                          const Text("Dost Ekle", style: TextStyle(fontSize: 18)),
+                                    )
+                                  ],
+                                ),
+                              );
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              Navigator.push(
+                                context,
+                                CupertinoDialogRoute(
+                                    builder: (context) {
+                                      return const AddAdvertizePage();
+                                    },
+                                    context: context),
+                              );
+                            }
                           },
                           child: const Text(
                             "İlan ver",

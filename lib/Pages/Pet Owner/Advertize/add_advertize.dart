@@ -27,8 +27,8 @@ class _AddAdvertizePageState extends State<AddAdvertizePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Lütfen adres seçin"),
-                  SizedBox(
+                  const Text("Lütfen adres seçin"),
+                  const SizedBox(
                     width: 20,
                   ),
                   StreamBuilder(
@@ -47,10 +47,10 @@ class _AddAdvertizePageState extends State<AddAdvertizePage> {
                             items: snapshot.data!.docs
                                 .map(
                                   (document) => DropdownMenuItem(
+                                    value: document.id,
                                     child: Text(
                                       document["Title"],
                                     ),
-                                    value: document.id,
                                   ),
                                 )
                                 .toList(),
@@ -69,8 +69,8 @@ class _AddAdvertizePageState extends State<AddAdvertizePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Lütfen dostunuzu seçin"),
-                  SizedBox(
+                  const Text("Lütfen dostunuzu seçin"),
+                  const SizedBox(
                     width: 20,
                   ),
                   StreamBuilder(
@@ -89,10 +89,10 @@ class _AddAdvertizePageState extends State<AddAdvertizePage> {
                             items: snapshot.data!.docs
                                 .map(
                                   (document) => DropdownMenuItem(
+                                    value: document.id,
                                     child: Text(
                                       document["Pet Name"],
                                     ),
-                                    value: document.id,
                                   ),
                                 )
                                 .toList(),
