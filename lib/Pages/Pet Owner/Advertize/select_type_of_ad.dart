@@ -1,23 +1,22 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/daily_on_your_house.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/daily_walking.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/list_view_page.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/nightly_filter_page.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/special_filter_page.dart';
-
-import 'daily_care_filter_page.dart';
 
 int listCounter = 0;
 
-class FirstFilterPage extends StatefulWidget {
-  const FirstFilterPage({super.key});
+class SelectTypeOfAdvertize extends StatefulWidget {
+  const SelectTypeOfAdvertize({super.key});
 
   @override
-  State<FirstFilterPage> createState() => _FirstFilterPageState();
+  State<SelectTypeOfAdvertize> createState() => _SelectTypeOfAdvertizeState();
 }
 
-class _FirstFilterPageState extends State<FirstFilterPage> {
+class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,53 +39,9 @@ class _FirstFilterPageState extends State<FirstFilterPage> {
           child: SingleChildScrollView(
         child: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            SizedBox(
-              height: 50,
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: TextField(
-                keyboardType: TextInputType.streetAddress,
-                textAlign: TextAlign.start,
-                controller: searchController,
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      showSearch(
-                        context: context,
-                        delegate: CitySearch(controller: searchController),
-                      );
-                    },
-                    icon: const Icon(Icons.location_on),
-                  ),
-                  hintText: "Şehir ara",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                ),
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
-                ),
-                readOnly: true,
-                textAlignVertical: TextAlignVertical.bottom,
-                textCapitalization: TextCapitalization.words,
-                onTap: () {
-                  showSearch(
-                    context: context,
-                    delegate: CitySearch(controller: searchController),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text(
-                  "Hizmetler",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -108,20 +63,9 @@ class _FirstFilterPageState extends State<FirstFilterPage> {
                           TextButton(
                               statesController: bakiciController,
                               onPressed: () {
-                                if (searchController.text.toString() != "") {
-                                  listCounter = 0;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const NightlyFilterPage(),
-                                      ));
-                                } else {
-                                  if (Platform.isIOS) {
-                                    showIOSAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  } else {
-                                    showAndroidAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  }
-                                }
+                                listCounter = 0;
+
+                                // move for nightly adveritize page
                               },
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -143,20 +87,8 @@ class _FirstFilterPageState extends State<FirstFilterPage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              if (searchController.text.toString() != "") {
-                                listCounter = 1;
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const NightlyFilterPage(),
-                                    ));
-                              } else {
-                                if (Platform.isIOS) {
-                                  showIOSAlert(context, const Text("Lütfen şehir seçiniz"));
-                                } else {
-                                  showAndroidAlert(context, const Text("Lütfen şehir seçiniz"));
-                                }
-                              }
+                              listCounter = 1;
+                              // move for second nightly advertize page
                             },
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -189,27 +121,45 @@ class _FirstFilterPageState extends State<FirstFilterPage> {
                           TextButton(
                               statesController: bakiciController,
                               onPressed: () {
-                                if (searchController.text.toString() != "") {
-                                  listCounter = 2;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const DailyCareFilterPage(),
-                                      ));
-                                } else {
-                                  if (Platform.isIOS) {
-                                    showIOSAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  } else {
-                                    showAndroidAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  }
-                                }
+                                listCounter = 2;
                               },
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Gün içi bakım",
+                                    "Gün içi bakım (Kendi Evimde)",
+                                    style: TextStyle(fontSize: 17, color: Colors.black87),
+                                  ),
+                                  Text(
+                                    "Bakıcı belirlediğiniz saatlerde evcil hayvanınıza sizin evinizde eşlik edecek. ",
+                                    style: TextStyle(fontSize: 12, color: Colors.black45),
+                                  ),
+                                ],
+                              )),
+                          const Divider(
+                            height: 20,
+                            color: Colors.black,
+                          ),
+                          TextButton(
+                              statesController: bakiciController,
+                              onPressed: () {
+                                listCounter = 3;
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) {
+                                      return DailyOnYourHouse();
+                                    },
+                                  ),
+                                );
+                              },
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Gün içi bakım (Bakıcı Evinde)",
                                     style: TextStyle(fontSize: 17, color: Colors.black87),
                                   ),
                                   Text(
@@ -225,20 +175,7 @@ class _FirstFilterPageState extends State<FirstFilterPage> {
                           TextButton(
                               statesController: bakiciController,
                               onPressed: () {
-                                if (searchController.text.toString() != "") {
-                                  listCounter = 3;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const DailyWalkingPage(),
-                                      ));
-                                } else {
-                                  if (Platform.isIOS) {
-                                    showIOSAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  } else {
-                                    showAndroidAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  }
-                                }
+                                listCounter = 4;
                               },
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -270,20 +207,7 @@ class _FirstFilterPageState extends State<FirstFilterPage> {
                           TextButton(
                               statesController: bakiciController,
                               onPressed: () {
-                                if (searchController.text.toString() != "") {
-                                  listCounter = 4;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const OzelFilterPage(),
-                                      ));
-                                } else {
-                                  if (Platform.isIOS) {
-                                    showIOSAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  } else {
-                                    showAndroidAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  }
-                                }
+                                listCounter = 4;
                               },
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -306,20 +230,7 @@ class _FirstFilterPageState extends State<FirstFilterPage> {
                           TextButton(
                               statesController: bakiciController,
                               onPressed: () {
-                                if (searchController.text.toString() != "") {
-                                  listCounter = 5;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const OzelFilterPage(),
-                                      ));
-                                } else {
-                                  if (Platform.isIOS) {
-                                    showIOSAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  } else {
-                                    showAndroidAlert(context, const Text("Lütfen şehir seçiniz"));
-                                  }
-                                }
+                                listCounter = 5;
                               },
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.start,

@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/list_view_page.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/nightly_filter_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:intl/intl.dart';
@@ -15,14 +16,14 @@ DateTime? selectedDayEnd;
 String? selectedAdres;
 String? selectedPet;
 
-class DailyCareFilterPage extends StatefulWidget {
-  const DailyCareFilterPage({super.key});
+class DailyOnYourHouse extends StatefulWidget {
+  const DailyOnYourHouse({super.key});
 
   @override
-  State<DailyCareFilterPage> createState() => _DailyCareFilterPageState();
+  State<DailyOnYourHouse> createState() => _DailyOnYourHouseState();
 }
 
-class _DailyCareFilterPageState extends State<DailyCareFilterPage> {
+class _DailyOnYourHouseState extends State<DailyOnYourHouse> {
   final DatePickerController _datePickerController = DatePickerController();
   @override
   void initState() {
@@ -69,17 +70,98 @@ class _DailyCareFilterPageState extends State<DailyCareFilterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Center(
-                        child: Text(
-                      searchController.text.toString(),
-                      style: const TextStyle(fontSize: 25),
-                    )),
-                    const SizedBox(height: 20),
-                    const Center(child: PlaceSelectorLogic()),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: PlaceSelectorLogic(),
+                      ),
+                      Row(
+                        children: [
+                          const Text("Lütfen adres seçin"),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .collection("User Adress")
+                                  .snapshots(),
+                              builder:
+                                  (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const CircularProgressIndicator.adaptive();
+                                } else {
+                                  return DropdownButton(
+                                    iconEnabledColor: applicationPurple,
+                                    iconDisabledColor: applicationOrange,
+                                    items: snapshot.data!.docs
+                                        .map(
+                                          (document) => DropdownMenuItem(
+                                            value: document["Title"],
+                                            child: Text(
+                                              document["Title"],
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                    value: selectedAdres,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        selectedAdres = newValue as String?;
+                                      });
+                                    },
+                                  );
+                                }
+                              }),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text("Lütfen dostunuzu seçin"),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .collection("User Pets")
+                                .snapshots(),
+                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return const CircularProgressIndicator.adaptive();
+                              } else {
+                                return DropdownButton(
+                                  iconEnabledColor: applicationPurple,
+                                  iconDisabledColor: applicationOrange,
+                                  items: snapshot.data!.docs
+                                      .map(
+                                        (document) => DropdownMenuItem(
+                                          value: document["Pet Name"],
+                                          child: Text(
+                                            document["Pet Name"],
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                  value: selectedPet,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedPet = newValue as String?;
+                                    });
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -287,13 +369,27 @@ class _DailyCareFilterPageState extends State<DailyCareFilterPage> {
                   ),
                 ),
                 TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (selectedDayStart == null || selectedDayEnd == null) {
                         showIOSAlert(context, const Text("Başlangıç ve Bitiş zamanı seçiniz"));
                       } else if (selectedDayStart!.isBefore(selectedDayEnd!)) {
                         print(selectedDayStart);
                         print(selectedDayEnd);
                         print("Daily Care");
+                        final data = FirebaseFirestore.instance
+                            .collection("advertize")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .collection("advertizement")
+                            .doc();
+
+                        await data.set({
+                          "Adres": selectedAdres,
+                          "Pet": selectedPet,
+                          "Time-Start": selectedDayStart,
+                          "Time-End": selectedDayEnd,
+                          "ID": data.id
+                        });
+                        Navigator.pop(context);
                       } else {
                         showIOSAlert(
                             context, const Text("Bitiş saati, başlangıç saaatinden önce olamaz"));

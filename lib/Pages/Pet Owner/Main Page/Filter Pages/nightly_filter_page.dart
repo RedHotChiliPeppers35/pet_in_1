@@ -161,20 +161,25 @@ class PlaceSelectorLogic extends StatelessWidget {
       );
     } else if (listCounter == 2) {
       return const Text(
-        "Gün içi bakım",
+        "Gün içi bakım(Kendi Evimde)",
         style: TextStyle(fontSize: 17),
       );
     } else if (listCounter == 3) {
       return const Text(
-        "Köpek gezdirme",
+        "Gün içi bakım(Bakıcı Evinde)",
         style: TextStyle(fontSize: 17),
       );
     } else if (listCounter == 4) {
       return const Text(
-        "Pet Kuaför",
+        "Köpek gezdirme",
         style: TextStyle(fontSize: 17),
       );
     } else if (listCounter == 5) {
+      return const Text(
+        "Pet Kuaför",
+        style: TextStyle(fontSize: 17),
+      );
+    } else if (listCounter == 6) {
       return const Text(
         "Köpek Eğitimi",
         style: TextStyle(fontSize: 17),
