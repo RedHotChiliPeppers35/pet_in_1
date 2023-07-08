@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/add_advertize.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/add_adress_page.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet_add_page.dart';
-import 'package:flutter_application_1/Pages/constants.dart';
 import 'package:flutter_application_1/main.dart';
 
 class AdvertizePage extends StatefulWidget {
@@ -22,6 +21,25 @@ class _AdvertizePageState extends State<AdvertizePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        CupertinoDialogRoute(
+                            builder: (context) {
+                              return const AddAdvertizePage();
+                            },
+                            context: context));
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    size: 30,
+                  )),
+            )
+          ],
           title: const Text(
             "İlanlarım",
           ),
@@ -74,7 +92,6 @@ class _AdvertizePageState extends State<AdvertizePage> {
                             QuerySnapshot petSnapshot =
                                 await collectionReference.collection("User Pets").get();
                             if (adressSnapshot.docs.isEmpty) {
-                              // ignore: use_build_context_synchronously
                               showCupertinoModalPopup(
                                 context: context,
                                 builder: (context) => CupertinoAlertDialog(
@@ -100,7 +117,6 @@ class _AdvertizePageState extends State<AdvertizePage> {
                                 ),
                               );
                             } else if (petSnapshot.docs.isEmpty) {
-                              // ignore: use_build_context_synchronously
                               showCupertinoModalPopup(
                                 context: context,
                                 builder: (context) => CupertinoAlertDialog(
@@ -124,7 +140,6 @@ class _AdvertizePageState extends State<AdvertizePage> {
                                 ),
                               );
                             } else {
-                              // ignore: use_build_context_synchronously
                               Navigator.push(
                                 context,
                                 CupertinoDialogRoute(
@@ -144,10 +159,12 @@ class _AdvertizePageState extends State<AdvertizePage> {
                     ),
                   );
                 } else {
-                  return Container(
-                    color: Colors.blue,
-                    height: 100,
-                    width: 100,
+                  return ListView(
+                    children: snapshot.data!.docs.map((document) {
+                      return Text(
+                        document["Pet"],
+                      );
+                    }).toList(),
                   );
                 }
               },

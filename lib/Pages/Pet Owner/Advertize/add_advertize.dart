@@ -47,7 +47,7 @@ class _AddAdvertizePageState extends State<AddAdvertizePage> {
                             items: snapshot.data!.docs
                                 .map(
                                   (document) => DropdownMenuItem(
-                                    value: document.id,
+                                    value: document["Title"],
                                     child: Text(
                                       document["Title"],
                                     ),
@@ -57,8 +57,7 @@ class _AddAdvertizePageState extends State<AddAdvertizePage> {
                             value: selectedAdres,
                             onChanged: (newValue) {
                               setState(() {
-                                print(newValue);
-                                selectedAdres = newValue;
+                                selectedAdres = newValue as String?;
                               });
                             },
                           );
@@ -74,39 +73,54 @@ class _AddAdvertizePageState extends State<AddAdvertizePage> {
                     width: 20,
                   ),
                   StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(FirebaseAuth.instance.currentUser!.uid)
-                          .collection("User Pets")
-                          .snapshots(),
-                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData) {
-                          return const CircularProgressIndicator.adaptive();
-                        } else {
-                          return DropdownButton(
-                            iconEnabledColor: applicationPurple,
-                            iconDisabledColor: applicationOrange,
-                            items: snapshot.data!.docs
-                                .map(
-                                  (document) => DropdownMenuItem(
-                                    value: document.id,
-                                    child: Text(
-                                      document["Pet Name"],
-                                    ),
+                    stream: FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .collection("User Pets")
+                        .snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const CircularProgressIndicator.adaptive();
+                      } else {
+                        return DropdownButton(
+                          iconEnabledColor: applicationPurple,
+                          iconDisabledColor: applicationOrange,
+                          items: snapshot.data!.docs
+                              .map(
+                                (document) => DropdownMenuItem(
+                                  value: document["Pet Name"],
+                                  child: Text(
+                                    document["Pet Name"],
                                   ),
-                                )
-                                .toList(),
-                            value: selectedPet,
-                            onChanged: (newValue) {
-                              setState(() {
-                                selectedPet = newValue;
-                              });
-                            },
-                          );
-                        }
-                      }),
+                                ),
+                              )
+                              .toList(),
+                          value: selectedPet,
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedPet = newValue as String?;
+                            });
+                          },
+                        );
+                      }
+                    },
+                  ),
                 ],
-              )
+              ),
+              TextButton(
+                  onPressed: () async {
+                    final data = await FirebaseFirestore.instance
+                        .collection("advertize")
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .collection("advertizement")
+                        .doc();
+
+                    data.set({"Adres": selectedAdres, "Pet": selectedPet, "ID": data.id});
+                    Navigator.pop(context);
+
+                    print(data.id);
+                  },
+                  child: Text("İlan ver"))
             ],
           ),
         ),

@@ -17,7 +17,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   //navigation bar homepage index
 
-  int selectedNavIndex = 2;
+  int selectedNavIndex = 1;
 
   final user = FirebaseAuth.instance.currentUser;
 
