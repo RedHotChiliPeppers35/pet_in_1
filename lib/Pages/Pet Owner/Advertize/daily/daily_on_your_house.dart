@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/select_type_of_ad.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/main_page.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/nightly_filter_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:intl/intl.dart';
 import 'package:horizontal_center_date_picker/datepicker_controller.dart';
@@ -31,6 +32,17 @@ class _DailyOnYourHouseState extends State<DailyOnYourHouse> {
     selectedDayStart = DateTime.now();
     selectedStartTime = null;
     selectedEndTime = null;
+  }
+
+  @override
+  void dispose() {
+    selectedStartTime = null;
+    selectedEndTime = null;
+    selectedDayStart = null;
+    selectedDayEnd = null;
+    selectedAdres = null;
+    selectedPet = null;
+    super.dispose();
   }
 
   String getStartDate() {
@@ -75,8 +87,8 @@ class _DailyOnYourHouseState extends State<DailyOnYourHouse> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Center(
-                        child: PlaceSelectorLogic(),
+                      const Center(
+                        child: AdvertizeSelector(),
                       ),
                       Row(
                         children: [
@@ -372,15 +384,17 @@ class _DailyOnYourHouseState extends State<DailyOnYourHouse> {
                     onPressed: () async {
                       if (selectedDayStart == null || selectedDayEnd == null) {
                         showIOSAlert(context, const Text("Başlangıç ve Bitiş zamanı seçiniz"));
+                      } else if (selectedPet == null || selectedAdres == null) {
+                        showIOSAlert(context, const Text("Lütfen adresinizi ve dostunuzu seçin"));
                       } else if (selectedDayStart!.isBefore(selectedDayEnd!)) {
-                        print(selectedDayStart);
-                        print(selectedDayEnd);
-                        print("Daily Care");
                         final data = FirebaseFirestore.instance
                             .collection("advertize")
                             .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .collection("advertizement")
+                            .collection("Daily on Pet Owners House")
                             .doc();
+                        print(selectedDayStart);
+                        print(selectedDayEnd);
+                        print("Daily Care");
 
                         await data.set({
                           "Adres": selectedAdres,
@@ -389,7 +403,11 @@ class _DailyOnYourHouseState extends State<DailyOnYourHouse> {
                           "Time-End": selectedDayEnd,
                           "ID": data.id
                         });
-                        Navigator.pop(context);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            CupertinoDialogRoute(
+                                builder: (context) => const MainPage(), context: context),
+                            (route) => false);
                       } else {
                         showIOSAlert(
                             context, const Text("Bitiş saati, başlangıç saaatinden önce olamaz"));

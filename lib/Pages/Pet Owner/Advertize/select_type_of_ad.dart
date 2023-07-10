@@ -1,11 +1,8 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/daily_on_your_house.dart';
-import 'package:flutter_application_1/Pages/constants.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/daily_walking.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/daily/daily_on_your_house.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/nightly/nightly_advertize.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/list_view_page.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/special_filter_page.dart';
 
 int listCounter = 0;
 
@@ -64,6 +61,11 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                               statesController: bakiciController,
                               onPressed: () {
                                 listCounter = 0;
+                                Navigator.push(context, CupertinoPageRoute(
+                                  builder: (context) {
+                                    return const NightlyAdvertize();
+                                  },
+                                ));
 
                                 // move for nightly adveritize page
                               },
@@ -88,7 +90,11 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                           TextButton(
                             onPressed: () {
                               listCounter = 1;
-                              // move for second nightly advertize page
+                              Navigator.push(context, CupertinoPageRoute(
+                                builder: (context) {
+                                  return const NightlyAdvertize();
+                                },
+                              ));
                             },
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -122,6 +128,15 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                               statesController: bakiciController,
                               onPressed: () {
                                 listCounter = 2;
+                                print(listCounter);
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) {
+                                      return const DailyOnYourHouse();
+                                    },
+                                  ),
+                                );
                               },
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -145,14 +160,6 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                               statesController: bakiciController,
                               onPressed: () {
                                 listCounter = 3;
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) {
-                                      return DailyOnYourHouse();
-                                    },
-                                  ),
-                                );
                               },
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -257,5 +264,38 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
         ),
       )),
     );
+  }
+}
+
+class AdvertizeSelector extends StatelessWidget {
+  const AdvertizeSelector({super.key});
+
+  final TextStyle myStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+
+  @override
+  Widget build(BuildContext context) {
+    if (listCounter == 0) {
+      return Text("Bakıcı evinde konaklama", style: myStyle);
+    } else if (listCounter == 1) {
+      return Text("Kendi evinde konaklama", style: myStyle);
+    } else if (listCounter == 2) {
+      return Text(
+        "Gün içi bakım (Kendi Evimde)",
+        style: myStyle,
+      );
+    } else if (listCounter == 3) {
+      return Text("Gün içi bakım (Bakıcı Evinde)", style: myStyle);
+    } else if (listCounter == 4) {
+      return Text("Köpek gezdirme", style: myStyle);
+    } else if (listCounter == 5) {
+      return Text("Pet Kuaför", style: myStyle);
+    } else if (listCounter == 6) {
+      return Text(
+        "Köpek Eğitimi",
+        style: myStyle,
+      );
+    } else {
+      return const SelectTypeOfAdvertize();
+    }
   }
 }
