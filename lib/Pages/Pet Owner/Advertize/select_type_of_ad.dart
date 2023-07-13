@@ -35,232 +35,230 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
       body: SafeArea(
           child: SingleChildScrollView(
         child: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Gecelik",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
-                          ),
-                          TextButton(
-                              statesController: bakiciController,
-                              onPressed: () {
-                                listCounter = 0;
-                                Navigator.push(context, CupertinoPageRoute(
-                                  builder: (context) {
-                                    return const NightlyAdvertize();
-                                  },
-                                ));
-
-                                // move for nightly adveritize page
-                              },
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Bakıcı evinde konaklama",
-                                    style: TextStyle(fontSize: 17, color: Colors.black87),
-                                  ),
-                                  Text(
-                                    "Bakıcı evcil hayvanlarınızı misafir edecek.",
-                                    style: TextStyle(fontSize: 12, color: Colors.black45),
-                                  ),
-                                ],
-                              )),
-                          const Divider(
-                            height: 20,
-                            color: Colors.black,
-                          ),
-                          TextButton(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Gecelik",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                        ),
+                        TextButton(
+                            statesController: bakiciController,
                             onPressed: () {
-                              listCounter = 1;
+                              listCounter = 0;
                               Navigator.push(context, CupertinoPageRoute(
                                 builder: (context) {
                                   return const NightlyAdvertize();
                                 },
                               ));
+
+                              // move for nightly adveritize page
                             },
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Kendi evinde konaklama",
+                                  "Bakıcı evinde konaklama",
                                   style: TextStyle(fontSize: 17, color: Colors.black87),
                                 ),
                                 Text(
-                                  "Bakıcı evcil hayvanınızla sizin evinizde ilgilenecek.",
+                                  "Bakıcı evcil hayvanlarınızı misafir edecek.",
                                   style: TextStyle(fontSize: 12, color: Colors.black45),
                                 ),
                               ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Gün içi",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87),
-                          ),
-                          TextButton(
-                              statesController: bakiciController,
-                              onPressed: () {
-                                listCounter = 2;
-                                print(listCounter);
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) {
-                                      return const DailyOnYourHouse();
-                                    },
-                                  ),
-                                );
+                            )),
+                        const Divider(
+                          height: 20,
+                          color: Colors.black,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            listCounter = 1;
+                            Navigator.push(context, CupertinoPageRoute(
+                              builder: (context) {
+                                return const NightlyAdvertize();
                               },
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Gün içi bakım (Kendi Evimde)",
-                                    style: TextStyle(fontSize: 17, color: Colors.black87),
-                                  ),
-                                  Text(
-                                    "Bakıcı belirlediğiniz saatlerde evcil hayvanınıza sizin evinizde eşlik edecek. ",
-                                    style: TextStyle(fontSize: 12, color: Colors.black45),
-                                  ),
-                                ],
-                              )),
-                          const Divider(
-                            height: 20,
-                            color: Colors.black,
+                            ));
+                          },
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Kendi evinde konaklama",
+                                style: TextStyle(fontSize: 17, color: Colors.black87),
+                              ),
+                              Text(
+                                "Bakıcı evcil hayvanınızla sizin evinizde ilgilenecek.",
+                                style: TextStyle(fontSize: 12, color: Colors.black45),
+                              ),
+                            ],
                           ),
-                          TextButton(
-                              statesController: bakiciController,
-                              onPressed: () {
-                                listCounter = 3;
-                              },
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Gün içi bakım (Bakıcı Evinde)",
-                                    style: TextStyle(fontSize: 17, color: Colors.black87),
-                                  ),
-                                  Text(
-                                    "Bakıcı belirlediğiniz saatlerde evcil hayvanınızı misafir edecek. ",
-                                    style: TextStyle(fontSize: 12, color: Colors.black45),
-                                  ),
-                                ],
-                              )),
-                          const Divider(
-                            height: 20,
-                            color: Colors.black,
-                          ),
-                          TextButton(
-                              statesController: bakiciController,
-                              onPressed: () {
-                                listCounter = 4;
-                              },
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Köpek gezdirme",
-                                    style: TextStyle(fontSize: 17, color: Colors.black87),
-                                  ),
-                                  Text(
-                                    "Bakıcı belirlediğiniz saatlerde köpeğinizi yürüyüşe çıkartacak.",
-                                    style: TextStyle(fontSize: 12, color: Colors.black45),
-                                  ),
-                                ],
-                              )),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Özel",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87),
-                          ),
-                          TextButton(
-                              statesController: bakiciController,
-                              onPressed: () {
-                                listCounter = 4;
-                              },
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Pet Kuaför",
-                                    style: TextStyle(fontSize: 17, color: Colors.black87),
-                                  ),
-                                  Text(
-                                    "Evcil hayvanınız için tüy bakımı yaptırın.",
-                                    style: TextStyle(fontSize: 12, color: Colors.black45),
-                                  ),
-                                ],
-                              )),
-                          const Divider(
-                            height: 20,
-                            color: Colors.black,
-                          ),
-                          TextButton(
-                              statesController: bakiciController,
-                              onPressed: () {
-                                listCounter = 5;
-                              },
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Köpek eğitimi",
-                                    style: TextStyle(fontSize: 17, color: Colors.black87),
-                                  ),
-                                  Text(
-                                    "Köpeğiniz için itaat eğitimi satın alın.",
-                                    style: TextStyle(fontSize: 12, color: Colors.black45),
-                                  ),
-                                ],
-                              )),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Gün içi",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87),
+                        ),
+                        TextButton(
+                            statesController: bakiciController,
+                            onPressed: () {
+                              listCounter = 2;
+                              print(listCounter);
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) {
+                                    return const DailyOnYourHouse();
+                                  },
+                                ),
+                              );
+                            },
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Gün içi bakım (Kendi Evimde)",
+                                  style: TextStyle(fontSize: 17, color: Colors.black87),
+                                ),
+                                Text(
+                                  "Bakıcı belirlediğiniz saatlerde evcil hayvanınıza sizin evinizde eşlik edecek. ",
+                                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                                ),
+                              ],
+                            )),
+                        const Divider(
+                          height: 20,
+                          color: Colors.black,
+                        ),
+                        TextButton(
+                            statesController: bakiciController,
+                            onPressed: () {
+                              listCounter = 3;
+                            },
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Gün içi bakım (Bakıcı Evinde)",
+                                  style: TextStyle(fontSize: 17, color: Colors.black87),
+                                ),
+                                Text(
+                                  "Bakıcı belirlediğiniz saatlerde evcil hayvanınızı misafir edecek. ",
+                                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                                ),
+                              ],
+                            )),
+                        const Divider(
+                          height: 20,
+                          color: Colors.black,
+                        ),
+                        TextButton(
+                            statesController: bakiciController,
+                            onPressed: () {
+                              listCounter = 4;
+                            },
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Köpek gezdirme",
+                                  style: TextStyle(fontSize: 17, color: Colors.black87),
+                                ),
+                                Text(
+                                  "Bakıcı belirlediğiniz saatlerde köpeğinizi yürüyüşe çıkartacak.",
+                                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Özel",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87),
+                        ),
+                        TextButton(
+                            statesController: bakiciController,
+                            onPressed: () {
+                              listCounter = 4;
+                            },
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Pet Kuaför",
+                                  style: TextStyle(fontSize: 17, color: Colors.black87),
+                                ),
+                                Text(
+                                  "Evcil hayvanınız için tüy bakımı yaptırın.",
+                                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                                ),
+                              ],
+                            )),
+                        const Divider(
+                          height: 20,
+                          color: Colors.black,
+                        ),
+                        TextButton(
+                            statesController: bakiciController,
+                            onPressed: () {
+                              listCounter = 5;
+                            },
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Köpek eğitimi",
+                                  style: TextStyle(fontSize: 17, color: Colors.black87),
+                                ),
+                                Text(
+                                  "Köpeğiniz için itaat eğitimi satın alın.",
+                                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ]),
+              ),
+            ],
+          ),
         ),
       )),
     );
@@ -270,7 +268,7 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
 class AdvertizeSelector extends StatelessWidget {
   const AdvertizeSelector({super.key});
 
-  final TextStyle myStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+  final TextStyle myStyle = const TextStyle(fontSize: 23, fontWeight: FontWeight.bold);
 
   @override
   Widget build(BuildContext context) {

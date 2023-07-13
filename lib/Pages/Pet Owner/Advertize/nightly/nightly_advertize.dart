@@ -12,6 +12,8 @@ import 'package:flutter_application_1/main.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+int price = 250;
+
 class NightlyAdvertize extends StatefulWidget {
   const NightlyAdvertize({super.key});
 
@@ -32,6 +34,13 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
       } else if (args.value is List<DateTime>) {
       } else {}
     });
+  }
+
+  @override
+  void dispose() {
+    selectedPet = null;
+    selectedAdres = null;
+    super.dispose();
   }
 
   @override
@@ -242,6 +251,11 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
                   ),
                 ),
                 const Expanded(child: SizedBox()),
+                BudgetWidget(
+                  max: 450,
+                  min: 250,
+                ),
+                const Expanded(child: SizedBox()),
                 TextButton(
                     onPressed: () async {
                       var start = _dateController.selectedRange?.startDate;
@@ -266,6 +280,7 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
                             .doc();
 
                         await data.set({
+                          "Price": price,
                           "Pet": selectedPet,
                           "Time-Start": start,
                           "Time-End": end,
@@ -283,12 +298,13 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
                         final data = FirebaseFirestore.instance
                             .collection("advertize")
                             .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .collection("Nightly on Hosts House")
+                            .collection("Nightly on Pet Owners House")
                             .doc();
 
                         await data.set({
-                          "Adress": selectedAdres,
+                          "Price": price,
                           "Pet": selectedPet,
+                          "Adress": selectedAdres,
                           "Time-Start": start,
                           "Time-End": end,
                           "ID": data.id
@@ -307,7 +323,7 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
                             color: applicationOrange, borderRadius: BorderRadius.circular(20)),
                         child: const Center(
                             child: Text(
-                          "Filtrele",
+                          "İlan Ver",
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         )))),
                 const Expanded(child: SizedBox()),
@@ -316,6 +332,87 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class BudgetWidget extends StatefulWidget {
+  BudgetWidget({super.key, @required this.max, @required this.min});
+
+  final int? max;
+  final int? min;
+
+  @override
+  State<BudgetWidget> createState() => _BudgetWidgetState();
+}
+
+class _BudgetWidgetState extends State<BudgetWidget> {
+  int? max;
+  int? min;
+
+  @override
+  void initState() {
+    price = 250;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Fiyatı ${widget.min}₺ \n${widget.max}₺ arasında \nbelirleyebilirsiniz",
+              style: TextStyle(
+                fontSize: 15,
+              ),
+              softWrap: true,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            FloatingActionButton.small(
+              backgroundColor: applicationPurple,
+              onPressed: () {
+                setState(() {
+                  price += 10;
+                  if (price >= widget.max!.toInt()) {
+                    price = widget.max!.toInt();
+                  }
+                });
+                print(price);
+              },
+              child: const Icon(Icons.add),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              "${price.toString()} ₺",
+              style: const TextStyle(fontSize: 30),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            FloatingActionButton.small(
+              onPressed: () {
+                setState(() {
+                  price -= 10;
+                  if (price <= widget.min!.toInt()) {
+                    price = widget.min!.toInt();
+                  }
+                });
+                print(price);
+              },
+              child: const Icon(Icons.remove),
+            )
+          ],
+        )
+      ],
     );
   }
 }
