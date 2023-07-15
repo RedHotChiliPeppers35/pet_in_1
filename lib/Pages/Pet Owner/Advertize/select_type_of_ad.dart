@@ -159,6 +159,14 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                             statesController: bakiciController,
                             onPressed: () {
                               listCounter = 3;
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) {
+                                    return const DailyOnYourHouse();
+                                  },
+                                ),
+                              );
                             },
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -182,6 +190,14 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                             statesController: bakiciController,
                             onPressed: () {
                               listCounter = 4;
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) {
+                                    return const DailyOnYourHouse();
+                                  },
+                                ),
+                              );
                             },
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -206,9 +222,9 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Özel",
+                          "Çok Yakında",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87),
+                              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black26),
                         ),
                         TextButton(
                             statesController: bakiciController,
@@ -221,17 +237,17 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                               children: [
                                 Text(
                                   "Pet Kuaför",
-                                  style: TextStyle(fontSize: 17, color: Colors.black87),
+                                  style: TextStyle(fontSize: 17, color: Colors.black26),
                                 ),
                                 Text(
                                   "Evcil hayvanınız için tüy bakımı yaptırın.",
-                                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                                  style: TextStyle(fontSize: 12, color: Colors.black26),
                                 ),
                               ],
                             )),
                         const Divider(
                           height: 20,
-                          color: Colors.black,
+                          color: Colors.black26,
                         ),
                         TextButton(
                             statesController: bakiciController,
@@ -244,11 +260,11 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                               children: [
                                 Text(
                                   "Köpek eğitimi",
-                                  style: TextStyle(fontSize: 17, color: Colors.black87),
+                                  style: TextStyle(fontSize: 17, color: Colors.black26),
                                 ),
                                 Text(
                                   "Köpeğiniz için itaat eğitimi satın alın.",
-                                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                                  style: TextStyle(fontSize: 12, color: Colors.black26),
                                 ),
                               ],
                             )),
