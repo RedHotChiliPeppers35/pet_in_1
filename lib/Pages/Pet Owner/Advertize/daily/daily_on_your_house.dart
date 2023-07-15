@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/nightly/nightly_advertize.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/select_type_of_ad.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/main_page.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
@@ -380,6 +381,7 @@ class _DailyOnYourHouseState extends State<DailyOnYourHouse> {
                     ),
                   ),
                 ),
+                const BudgetWidgetDaily(max: 200, min: 100),
                 TextButton(
                     onPressed: () async {
                       if (selectedDayStart == null || selectedDayEnd == null) {
@@ -422,7 +424,7 @@ class _DailyOnYourHouseState extends State<DailyOnYourHouse> {
                       ),
                       child: const Center(
                         child: Text(
-                          "Filtrele",
+                          "İlan ver",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
@@ -510,6 +512,87 @@ class _TimePickerEndState extends State<TimePickerEnd> {
               selectedDayEnd!.day, selectedEndTime!.hour, selectedEndTime!.minute);
         });
       },
+    );
+  }
+}
+
+class BudgetWidgetDaily extends StatefulWidget {
+  const BudgetWidgetDaily({super.key, @required this.max, @required this.min});
+
+  final int? max;
+  final int? min;
+
+  @override
+  State<BudgetWidgetDaily> createState() => _BudgetWidgetDailyState();
+}
+
+class _BudgetWidgetDailyState extends State<BudgetWidgetDaily> {
+  int? max;
+  int? min;
+
+  @override
+  void initState() {
+    price = 150;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Fiyatı saatlik ${widget.min}₺ \n${widget.max}₺ arasında \nbelirleyebilirsiniz",
+              style: const TextStyle(
+                fontSize: 15,
+              ),
+              softWrap: true,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            FloatingActionButton.small(
+              backgroundColor: applicationPurple,
+              onPressed: () {
+                setState(() {
+                  price += 10;
+                  if (price >= widget.max!.toInt()) {
+                    price = widget.max!.toInt();
+                  }
+                });
+                print(price);
+              },
+              child: const Icon(Icons.add),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              "${price.toString()} ₺",
+              style: const TextStyle(fontSize: 30),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            FloatingActionButton.small(
+              onPressed: () {
+                setState(() {
+                  price -= 10;
+                  if (price <= widget.min!.toInt()) {
+                    price = widget.min!.toInt();
+                  }
+                });
+                print(price);
+              },
+              child: const Icon(Icons.remove),
+            )
+          ],
+        )
+      ],
     );
   }
 }

@@ -242,16 +242,13 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
                     todayHighlightColor: applicationOrange,
                     controller: _dateController,
                     minDate: DateTime.now().subtract(const Duration(hours: 1)),
-                    initialSelectedRange: PickerDateRange(
-                        DateTime.now().add(const Duration(days: 1)),
-                        DateTime.now().add(const Duration(days: 5))),
                     onSelectionChanged: _onSelectionChanged,
                     selectionMode: DateRangePickerSelectionMode.range,
                     enablePastDates: false,
                   ),
                 ),
                 const Expanded(child: SizedBox()),
-                BudgetWidget(
+                BudgetWidgetNightly(
                   max: 450,
                   min: 250,
                 ),
@@ -336,23 +333,23 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
   }
 }
 
-class BudgetWidget extends StatefulWidget {
-  BudgetWidget({super.key, @required this.max, @required this.min});
+class BudgetWidgetNightly extends StatefulWidget {
+  const BudgetWidgetNightly({super.key, @required this.max, @required this.min});
 
   final int? max;
   final int? min;
 
   @override
-  State<BudgetWidget> createState() => _BudgetWidgetState();
+  State<BudgetWidgetNightly> createState() => _BudgetWidgetNightlyState();
 }
 
-class _BudgetWidgetState extends State<BudgetWidget> {
+class _BudgetWidgetNightlyState extends State<BudgetWidgetNightly> {
   int? max;
   int? min;
 
   @override
   void initState() {
-    price = 250;
+    price = 350;
     super.initState();
   }
 
@@ -365,8 +362,8 @@ class _BudgetWidgetState extends State<BudgetWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Fiyatı ${widget.min}₺ \n${widget.max}₺ arasında \nbelirleyebilirsiniz",
-              style: TextStyle(
+              "Fiyatı gecelik ${widget.min}₺ \n${widget.max}₺ arasında \nbelirleyebilirsiniz",
+              style: const TextStyle(
                 fontSize: 15,
               ),
               softWrap: true,
