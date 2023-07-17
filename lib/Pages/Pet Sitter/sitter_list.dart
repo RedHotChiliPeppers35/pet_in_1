@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/list_view_page.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
 import 'package:flutter_application_1/main.dart';
-
-import '../Pet Owner/Main Page/Filter Pages/first_filter_page.dart';
-import '../Pet Owner/Profile Page/personal_info_page.dart';
+import '../Pet Owner/Profile Page/personal info/personal_info_page.dart';
 
 class PetSitterListPage extends StatefulWidget {
   const PetSitterListPage({super.key});
@@ -106,15 +104,7 @@ class _PetSitterListPageState extends State<PetSitterListPage> {
                                     ),
                                   ),
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) => const FirstFilterPage(),
-                                          ));
-                                    },
-                                    icon: const Icon(Icons.filter_list))
+                                IconButton(onPressed: () {}, icon: const Icon(Icons.filter_list))
                               ],
                             )
                           ],

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/add_adress_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/Adres/add_adress_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:string_extensions/string_extensions.dart';
 
@@ -53,9 +53,9 @@ class _AdressPageState extends State<AdressPage> {
       body: Center(
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection("users")
+              .collection("Adresses")
               .doc(FirebaseAuth.instance.currentUser!.uid)
-              .collection("User Adress")
+              .collection("User Adresses")
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {

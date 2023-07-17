@@ -5,10 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/LoginSignUp/check_state.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/personal_info_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/personal%20info/personal_info_page.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
 
-import '../../../main.dart';
+import '../../../../main.dart';
 
 class DeleteAccountPage extends StatefulWidget {
   const DeleteAccountPage({super.key});

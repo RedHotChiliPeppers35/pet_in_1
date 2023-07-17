@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/nightly/nightly_advertize.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/select_type_of_ad.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/main_page.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/list_view_page.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/nightly_filter_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:intl/intl.dart';
 import 'package:horizontal_center_date_picker/datepicker_controller.dart';
@@ -15,14 +18,14 @@ DateTime? selectedDayEnd;
 String? selectedAdres;
 String? selectedPet;
 
-class DailyCareFilterPage extends StatefulWidget {
-  const DailyCareFilterPage({super.key});
+class DailyAdvertize extends StatefulWidget {
+  const DailyAdvertize({super.key});
 
   @override
-  State<DailyCareFilterPage> createState() => _DailyCareFilterPageState();
+  State<DailyAdvertize> createState() => _DailyAdvertizeState();
 }
 
-class _DailyCareFilterPageState extends State<DailyCareFilterPage> {
+class _DailyAdvertizeState extends State<DailyAdvertize> {
   final DatePickerController _datePickerController = DatePickerController();
   @override
   void initState() {
@@ -30,6 +33,17 @@ class _DailyCareFilterPageState extends State<DailyCareFilterPage> {
     selectedDayStart = DateTime.now();
     selectedStartTime = null;
     selectedEndTime = null;
+  }
+
+  @override
+  void dispose() {
+    selectedStartTime = null;
+    selectedEndTime = null;
+    selectedDayStart = null;
+    selectedDayEnd = null;
+    selectedAdres = null;
+    selectedPet = null;
+    super.dispose();
   }
 
   String getStartDate() {
@@ -69,17 +83,98 @@ class _DailyCareFilterPageState extends State<DailyCareFilterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Center(
-                        child: Text(
-                      searchController.text.toString(),
-                      style: const TextStyle(fontSize: 25),
-                    )),
-                    const SizedBox(height: 20),
-                    const Center(child: PlaceSelectorLogic()),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Center(
+                        child: AdvertizeSelector(),
+                      ),
+                      Row(
+                        children: [
+                          const Text("Lütfen adres seçin"),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .collection("User Adress")
+                                  .snapshots(),
+                              builder:
+                                  (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const CircularProgressIndicator.adaptive();
+                                } else {
+                                  return DropdownButton(
+                                    iconEnabledColor: applicationPurple,
+                                    iconDisabledColor: applicationOrange,
+                                    items: snapshot.data!.docs
+                                        .map(
+                                          (document) => DropdownMenuItem(
+                                            value: document["Title"],
+                                            child: Text(
+                                              document["Title"],
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                    value: selectedAdres,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        selectedAdres = newValue as String?;
+                                      });
+                                    },
+                                  );
+                                }
+                              }),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text("Lütfen dostunuzu seçin"),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .collection("User Pets")
+                                .snapshots(),
+                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return const CircularProgressIndicator.adaptive();
+                              } else {
+                                return DropdownButton(
+                                  iconEnabledColor: applicationPurple,
+                                  iconDisabledColor: applicationOrange,
+                                  items: snapshot.data!.docs
+                                      .map(
+                                        (document) => DropdownMenuItem(
+                                          value: document["Pet Name"],
+                                          child: Text(
+                                            document["Pet Name"],
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                  value: selectedPet,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedPet = newValue as String?;
+                                    });
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -286,14 +381,47 @@ class _DailyCareFilterPageState extends State<DailyCareFilterPage> {
                     ),
                   ),
                 ),
+                const BudgetWidgetDaily(max: 200, min: 100),
                 TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (selectedDayStart == null || selectedDayEnd == null) {
                         showIOSAlert(context, const Text("Başlangıç ve Bitiş zamanı seçiniz"));
+                      } else if (selectedPet == null || selectedAdres == null) {
+                        showIOSAlert(context, const Text("Lütfen adresinizi ve dostunuzu seçin"));
                       } else if (selectedDayStart!.isBefore(selectedDayEnd!)) {
-                        print(selectedDayStart);
-                        print(selectedDayEnd);
-                        print("Daily Care");
+                        final data = FirebaseFirestore.instance
+                            .collection("advertize")
+                            .doc(FirebaseAuth.instance.currentUser!.uid);
+                        if (listCounter == 2) {
+                          await data.collection("Daily on Pet Owner House").doc().set({
+                            "Adres": selectedAdres,
+                            "Pet": selectedPet,
+                            "Time-Start": selectedDayStart,
+                            "Time-End": selectedDayEnd,
+                            "ID": data.id
+                          });
+                        } else if (listCounter == 3) {
+                          await data.collection("Daily on Hosts House").doc().set({
+                            "Adres": selectedAdres,
+                            "Pet": selectedPet,
+                            "Time-Start": selectedDayStart,
+                            "Time-End": selectedDayEnd,
+                            "ID": data.id
+                          });
+                        } else if (listCounter == 4) {
+                          await data.collection("Dog Walking").doc().set({
+                            "Adres": selectedAdres,
+                            "Pet": selectedPet,
+                            "Time-Start": selectedDayStart,
+                            "Time-End": selectedDayEnd,
+                            "ID": data.id
+                          });
+                        }
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            CupertinoDialogRoute(
+                                builder: (context) => const MainPage(), context: context),
+                            (route) => false);
                       } else {
                         showIOSAlert(
                             context, const Text("Bitiş saati, başlangıç saaatinden önce olamaz"));
@@ -308,7 +436,7 @@ class _DailyCareFilterPageState extends State<DailyCareFilterPage> {
                       ),
                       child: const Center(
                         child: Text(
-                          "Filtrele",
+                          "İlan ver",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
@@ -396,6 +524,87 @@ class _TimePickerEndState extends State<TimePickerEnd> {
               selectedDayEnd!.day, selectedEndTime!.hour, selectedEndTime!.minute);
         });
       },
+    );
+  }
+}
+
+class BudgetWidgetDaily extends StatefulWidget {
+  const BudgetWidgetDaily({super.key, @required this.max, @required this.min});
+
+  final int? max;
+  final int? min;
+
+  @override
+  State<BudgetWidgetDaily> createState() => _BudgetWidgetDailyState();
+}
+
+class _BudgetWidgetDailyState extends State<BudgetWidgetDaily> {
+  int? max;
+  int? min;
+
+  @override
+  void initState() {
+    price = 150;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Fiyatı saatlik ${widget.min}₺ \n${widget.max}₺ arasında \nbelirleyebilirsiniz",
+              style: const TextStyle(
+                fontSize: 15,
+              ),
+              softWrap: true,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            FloatingActionButton.small(
+              backgroundColor: applicationPurple,
+              onPressed: () {
+                setState(() {
+                  price += 10;
+                  if (price >= widget.max!.toInt()) {
+                    price = widget.max!.toInt();
+                  }
+                });
+                print(price);
+              },
+              child: const Icon(Icons.add),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              "${price.toString()} ₺",
+              style: const TextStyle(fontSize: 30),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            FloatingActionButton.small(
+              onPressed: () {
+                setState(() {
+                  price -= 10;
+                  if (price <= widget.min!.toInt()) {
+                    price = widget.min!.toInt();
+                  }
+                });
+                print(price);
+              },
+              child: const Icon(Icons.remove),
+            )
+          ],
+        )
+      ],
     );
   }
 }

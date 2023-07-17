@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/personal_info_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/personal%20info/personal_info_page.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/first_filter_page.dart';
 import 'package:flutter_application_1/main.dart';
 
 TextEditingController searchController = TextEditingController();
@@ -265,15 +264,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
                                     ),
                                   ),
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) => const FirstFilterPage(),
-                                          ));
-                                    },
-                                    icon: const Icon(Icons.filter_list))
+                                IconButton(onPressed: () {}, icon: const Icon(Icons.filter_list))
                               ],
                             )
                           ],

@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/LoginSignUp/check_state.dart';
 import 'package:flutter_application_1/LoginSignUp/forgot_password_page.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/list_view_page.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/delete_account_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/personal%20info/delete_account_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../constants.dart';
+import '../../../constants.dart';
 
 class PersonalInformationPage extends StatefulWidget {
   const PersonalInformationPage({super.key});

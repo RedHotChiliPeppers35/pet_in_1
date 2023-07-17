@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/select_type_of_ad.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/Filter%20Pages/daily_care_filter_page.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/main_page.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
 import 'package:flutter_application_1/main.dart';
@@ -13,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 int price = 250;
+String? selectedPet;
+String? selectedAdres;
 
 class NightlyAdvertize extends StatefulWidget {
   const NightlyAdvertize({super.key});

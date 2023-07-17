@@ -2,7 +2,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet_add_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet/pet_add_page.dart';
 import "package:flutter_application_1/main.dart";
 
 String? selectedpet = "Köpek";

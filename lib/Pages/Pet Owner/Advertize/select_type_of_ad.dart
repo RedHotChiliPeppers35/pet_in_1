@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/daily/daily_on_your_house.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/daily/daily_advertize.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/nightly/nightly_advertize.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/list_view_page.dart';
 
@@ -132,7 +132,7 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                                 context,
                                 CupertinoPageRoute(
                                   builder: (context) {
-                                    return const DailyOnYourHouse();
+                                    return const DailyAdvertize();
                                   },
                                 ),
                               );
@@ -163,7 +163,7 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                                 context,
                                 CupertinoPageRoute(
                                   builder: (context) {
-                                    return const DailyOnYourHouse();
+                                    return const DailyAdvertize();
                                   },
                                 ),
                               );
@@ -194,7 +194,7 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                                 context,
                                 CupertinoPageRoute(
                                   builder: (context) {
-                                    return const DailyOnYourHouse();
+                                    return const DailyAdvertize();
                                   },
                                 ),
                               );

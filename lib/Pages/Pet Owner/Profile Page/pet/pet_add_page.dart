@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pets.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet/pets.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -49,11 +49,8 @@ class _PetAddPageState extends State<PetAddPage> {
   Future addPet() async {
     Reference ref = FirebaseStorage.instance.ref(FirebaseAuth.instance.currentUser!.uid);
 
-    final data = FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection("User Pets")
-        .doc();
+    final data =
+        FirebaseFirestore.instance.collection("Pets").doc(FirebaseAuth.instance.currentUser!.uid);
 
     if (file != null) {
       await ref.child("Pet Images").child(data.id).putFile(
@@ -62,7 +59,7 @@ class _PetAddPageState extends State<PetAddPage> {
     }
     petImage = await ref.child("Pet Images").child(data.id).getDownloadURL();
 
-    await data.set(
+    await data.collection("hahahaha").doc().set(
       {
         "Pet Name": petNameController.text.trim(),
         "Pet Kind": selectedpet!.trim(),

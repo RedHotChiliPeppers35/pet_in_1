@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/select_type_of_ad.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/add_adress_page.dart';
-import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet_add_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/Adres/add_adress_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet/pet_add_page.dart';
 import 'package:flutter_application_1/main.dart';
 
 class AdvertizePage extends StatefulWidget {
@@ -25,14 +25,72 @@ class _AdvertizePageState extends State<AdvertizePage> {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  DocumentReference collectionReference = FirebaseFirestore.instance
+                      .collection("Adresses")
+                      .doc(FirebaseAuth.instance.currentUser!.uid);
+
+                  QuerySnapshot adressSnapshot =
+                      await collectionReference.collection("User Adresses").get();
+
+                  QuerySnapshot petSnapshot =
+                      await collectionReference.collection("User Pets").get();
+
+                  if (adressSnapshot.docs.isEmpty) {
+                    showCupertinoModalPopup(
+                      context: context,
+                      builder: (context) => CupertinoAlertDialog(
+                        content: const Text("Adres eklemeden ilan veremezsiniz",
+                            style: TextStyle(fontSize: 18)),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                CupertinoDialogRoute(
+                                    builder: (context) => const AddAdressPage(), context: context),
+                              );
+                            },
+                            child: const Text(
+                              "Adres Ekle",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (petSnapshot.docs.isEmpty) {
+                    showCupertinoModalPopup(
+                      context: context,
+                      builder: (context) => CupertinoAlertDialog(
+                        content: const Text("Dost eklemeden ilan veremezsiniz",
+                            style: TextStyle(fontSize: 18)),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                CupertinoDialogRoute(
+                                    builder: (context) => const PetAddPage(), context: context),
+                              );
+                            },
+                            child: const Text("Dost Ekle", style: TextStyle(fontSize: 18)),
+                          )
+                        ],
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
                       context,
                       CupertinoDialogRoute(
                           builder: (context) {
                             return const SelectTypeOfAdvertize();
                           },
-                          context: context));
+                          context: context),
+                    );
+                  }
                 },
                 icon: const Icon(
                   Icons.add,

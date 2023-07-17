@@ -24,9 +24,9 @@ class _AddAdressPageState extends State<AddAdressPage> {
   String? userAdress;
   Future addAdress() async {
     final data = FirebaseFirestore.instance
-        .collection("users")
+        .collection("Adresses")
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection("User Adress")
+        .collection("User Adresses")
         .doc();
 
     await data.set({
