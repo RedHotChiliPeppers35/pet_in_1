@@ -59,7 +59,7 @@ class _PetAddPageState extends State<PetAddPage> {
     }
     petImage = await ref.child("Pet Images").child(data.id).getDownloadURL();
 
-    await data.collection("hahahaha").doc().set(
+    await data.collection(selectedpet!).doc().set(
       {
         "Pet Name": petNameController.text.trim(),
         "Pet Kind": selectedpet!.trim(),
