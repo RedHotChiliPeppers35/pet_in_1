@@ -24,12 +24,11 @@ class _AddAdressPageState extends State<AddAdressPage> {
   String? userAdress;
   Future addAdress() async {
     final data = FirebaseFirestore.instance
-        .collection("Adresses")
+        .collection("adresses")
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection("User Adresses")
-        .doc();
+        .collection("User Adresses");
 
-    await data.set({
+    await data.add({
       "Title": hintText.text.capitalize,
       "City": cityText.text.capitalize,
       "District": districtText.text.capitalize,

@@ -57,11 +57,13 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black87,
-              )),
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black87,
+            ),
+          ),
+          title: const AdvertizeSelector(),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -73,156 +75,56 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
                 Builder(
                   builder: (context) {
                     if (listCounter == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 30),
-                        child: Column(
-                          children: [
-                            const AdvertizeSelector(),
-                            const SizedBox(
-                              height: 60,
-                            ),
-                            Row(
-                              children: [
-                                const Text("Lütfen dostunuzu seçin"),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                StreamBuilder(
-                                  stream: FirebaseFirestore.instance
-                                      .collection("users")
-                                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                                      .collection("User Pets")
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return const CircularProgressIndicator.adaptive();
-                                    } else {
-                                      return DropdownButton(
-                                        iconEnabledColor: applicationPurple,
-                                        iconDisabledColor: applicationOrange,
-                                        items: snapshot.data!.docs
-                                            .map(
-                                              (document) => DropdownMenuItem(
-                                                value: document["Pet Name"],
-                                                child: Text(
-                                                  document["Pet Name"],
-                                                ),
-                                              ),
-                                            )
-                                            .toList(),
-                                        value: selectedPet,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            selectedPet = newValue as String?;
-                                          });
-                                        },
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      return const Column(
+                        children: [PetCaller()],
                       );
                     } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 30),
-                        child: Column(
-                          children: [
-                            const AdvertizeSelector(),
-                            const SizedBox(
-                              height: 60,
-                            ),
-                            Row(
-                              children: [
-                                const Text("Lütfen adres seçin"),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                StreamBuilder(
-                                    stream: FirebaseFirestore.instance
-                                        .collection("users")
-                                        .doc(FirebaseAuth.instance.currentUser!.uid)
-                                        .collection("User Adress")
-                                        .snapshots(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return const CircularProgressIndicator.adaptive();
-                                      } else {
-                                        return DropdownButton(
-                                          iconEnabledColor: applicationPurple,
-                                          iconDisabledColor: applicationOrange,
-                                          items: snapshot.data!.docs
-                                              .map(
-                                                (document) => DropdownMenuItem(
-                                                  value: document["Title"],
-                                                  child: Text(
-                                                    document["Title"],
-                                                  ),
-                                                ),
-                                              )
-                                              .toList(),
-                                          value: selectedAdres,
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              selectedAdres = newValue as String?;
-                                            });
-                                          },
-                                        );
-                                      }
-                                    }),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                const Text("Lütfen dostunuzu seçin"),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                StreamBuilder(
+                      return Column(
+                        children: [
+                          const PetCaller(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Text("Seçilen adres"),
+                              StreamBuilder(
                                   stream: FirebaseFirestore.instance
-                                      .collection("users")
+                                      .collection("adresses")
                                       .doc(FirebaseAuth.instance.currentUser!.uid)
-                                      .collection("User Pets")
+                                      .collection("User Adresses")
                                       .snapshots(),
                                   builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData) {
+                                      AsyncSnapshot<QuerySnapshot> adressSnapshot) {
+                                    if (!adressSnapshot.hasData) {
                                       return const CircularProgressIndicator.adaptive();
                                     } else {
-                                      return DropdownButton(
-                                        iconEnabledColor: applicationPurple,
-                                        iconDisabledColor: applicationOrange,
-                                        items: snapshot.data!.docs
-                                            .map(
-                                              (document) => DropdownMenuItem(
-                                                value: document["Pet Name"],
-                                                child: Text(
-                                                  document["Pet Name"],
-                                                ),
-                                              ),
-                                            )
-                                            .toList(),
-                                        value: selectedPet,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            selectedPet = newValue as String?;
-                                          });
-                                        },
+                                      return Container(
+                                        height: 50,
+                                        width: 200,
+                                        child: CupertinoPicker(
+                                          backgroundColor: Colors.transparent,
+                                          itemExtent: 30,
+                                          onSelectedItemChanged: (value) {},
+                                          children: adressSnapshot.data!.docs
+                                              .map(
+                                                (document) => DropdownMenuItem(
+                                                    value: document["Title"],
+                                                    child: Center(
+                                                      child: Text(
+                                                        document["Title"],
+                                                      ),
+                                                    )),
+                                              )
+                                              .toList(),
+                                        ),
                                       );
                                     }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  }),
+                            ],
+                          ),
+                        ],
                       );
                     }
                   },
@@ -249,7 +151,7 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
                   ),
                 ),
                 const Expanded(child: SizedBox()),
-                BudgetWidgetNightly(
+                const BudgetWidgetNightly(
                   max: 450,
                   min: 250,
                 ),
@@ -345,9 +247,6 @@ class BudgetWidgetNightly extends StatefulWidget {
 }
 
 class _BudgetWidgetNightlyState extends State<BudgetWidgetNightly> {
-  int? max;
-  int? min;
-
   @override
   void initState() {
     price = 350;
@@ -411,6 +310,134 @@ class _BudgetWidgetNightlyState extends State<BudgetWidgetNightly> {
           ],
         )
       ],
+    );
+  }
+}
+
+class PetCaller extends StatefulWidget {
+  const PetCaller({super.key});
+
+  @override
+  State<PetCaller> createState() => _PetCallerState();
+}
+
+class _PetCallerState extends State<PetCaller> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("pets")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("Balık")
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> fishSnapshot) {
+          return StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("pets")
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("Hamster")
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> hamsterSnapshot) {
+                return StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("pets")
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .collection("Kuş")
+                        .snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> birdSnapshot) {
+                      return StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("pets")
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .collection("Kedi")
+                              .snapshots(),
+                          builder:
+                              (BuildContext context, AsyncSnapshot<QuerySnapshot> catSnapshot) {
+                            return StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("pets")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .collection("Köpek")
+                                  .snapshots(),
+                              builder:
+                                  (BuildContext context, AsyncSnapshot<QuerySnapshot> dogSnapshot) {
+                                if (dogSnapshot.connectionState == ConnectionState.waiting &&
+                                    catSnapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator.adaptive();
+                                } else {
+                                  return Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.9,
+                                        height: 100,
+                                        child: Center(
+                                            child: ListView.builder(
+                                          itemCount: 1,
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return Row(
+                                              children: [
+                                                PetCard(petSnapshot: dogSnapshot),
+                                                PetCard(petSnapshot: catSnapshot),
+                                                PetCard(petSnapshot: birdSnapshot),
+                                                PetCard(petSnapshot: hamsterSnapshot),
+                                                PetCard(petSnapshot: fishSnapshot)
+                                              ],
+                                            );
+                                          },
+                                        )),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            );
+                          });
+                    });
+              });
+        });
+  }
+}
+
+class PetCard extends StatefulWidget {
+  PetCard({@required this.petSnapshot, super.key});
+
+  final AsyncSnapshot<QuerySnapshot<Object?>>? petSnapshot;
+
+  @override
+  State<PetCard> createState() => _PetCardState();
+}
+
+class _PetCardState extends State<PetCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: widget.petSnapshot!.data!.docs.map(
+        (document) {
+          return TextButton(
+            onPressed: () {
+              print(document.id);
+            },
+            child: Card(
+              elevation: 5,
+              shape: const CircleBorder(),
+              child: Center(
+                  child: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                radius: 50,
+                foregroundImage: NetworkImage(document["Pet Photo URL"]),
+              )),
+            ),
+          );
+        },
+      ).toList(),
     );
   }
 }

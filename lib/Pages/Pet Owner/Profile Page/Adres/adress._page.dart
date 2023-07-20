@@ -53,7 +53,7 @@ class _AdressPageState extends State<AdressPage> {
       body: Center(
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection("Adresses")
+              .collection("adresses")
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .collection("User Adresses")
               .snapshots(),
@@ -120,10 +120,10 @@ class _AdressPageState extends State<AdressPage> {
                                                     isDefaultAction: true,
                                                     onPressed: () async {
                                                       await FirebaseFirestore.instance
-                                                          .collection("users")
+                                                          .collection("adresses")
                                                           .doc(FirebaseAuth
                                                               .instance.currentUser!.uid)
-                                                          .collection("User Adress")
+                                                          .collection("User Adresses")
                                                           .doc(document.id)
                                                           .delete()
                                                           .then((value) => Navigator.pop(context));

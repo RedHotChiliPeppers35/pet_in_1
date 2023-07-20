@@ -49,8 +49,11 @@ class _PetAddPageState extends State<PetAddPage> {
   Future addPet() async {
     Reference ref = FirebaseStorage.instance.ref(FirebaseAuth.instance.currentUser!.uid);
 
-    final data =
-        FirebaseFirestore.instance.collection("Pets").doc(FirebaseAuth.instance.currentUser!.uid);
+    final data = FirebaseFirestore.instance
+        .collection("pets")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection(selectedpet.toString())
+        .doc();
 
     if (file != null) {
       await ref.child("Pet Images").child(data.id).putFile(
@@ -59,7 +62,7 @@ class _PetAddPageState extends State<PetAddPage> {
     }
     petImage = await ref.child("Pet Images").child(data.id).getDownloadURL();
 
-    await data.collection(selectedpet!).doc().set(
+    await data.set(
       {
         "Pet Name": petNameController.text.trim(),
         "Pet Kind": selectedpet!.trim(),
@@ -311,7 +314,13 @@ class DropDownPets extends StatefulWidget {
 }
 
 class _DropDownPetsState extends State<DropDownPets> {
-  List<String> pets = ["Köpek", "Kedi", "Kuş", "Hamster", "Balık", "Egzotik"];
+  List<String> pets = [
+    "Köpek",
+    "Kedi",
+    "Kuş",
+    "Hamster",
+    "Balık",
+  ];
 
   @override
   Widget build(BuildContext context) {

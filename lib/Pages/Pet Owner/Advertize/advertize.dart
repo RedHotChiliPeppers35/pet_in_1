@@ -26,15 +26,20 @@ class _AdvertizePageState extends State<AdvertizePage> {
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(
                 onPressed: () async {
-                  DocumentReference collectionReference = FirebaseFirestore.instance
-                      .collection("Adresses")
+                  DocumentReference adressRef = FirebaseFirestore.instance
+                      .collection("adresses")
+                      .doc(FirebaseAuth.instance.currentUser!.uid);
+                  DocumentReference petRef = FirebaseFirestore.instance
+                      .collection("pets")
                       .doc(FirebaseAuth.instance.currentUser!.uid);
 
-                  QuerySnapshot adressSnapshot =
-                      await collectionReference.collection("User Adresses").get();
+                  QuerySnapshot adressSnapshot = await adressRef.collection("User Adresses").get();
 
-                  QuerySnapshot petSnapshot =
-                      await collectionReference.collection("User Pets").get();
+                  QuerySnapshot dogSnapshot = await petRef.collection("Köpek").get();
+
+                  QuerySnapshot catSnapshot = await petRef.collection("Kedi").get();
+
+                  QuerySnapshot birdSnapshot = await petRef.collection("Kuş").get();
 
                   if (adressSnapshot.docs.isEmpty) {
                     showCupertinoModalPopup(
@@ -60,7 +65,9 @@ class _AdvertizePageState extends State<AdvertizePage> {
                         ],
                       ),
                     );
-                  } else if (petSnapshot.docs.isEmpty) {
+                  } else if (dogSnapshot.docs.isEmpty &&
+                      catSnapshot.docs.isEmpty &&
+                      birdSnapshot.docs.isEmpty) {
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) => CupertinoAlertDialog(
@@ -155,16 +162,22 @@ class _AdvertizePageState extends State<AdvertizePage> {
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      DocumentReference collectionReference = FirebaseFirestore
-                                          .instance
-                                          .collection("users")
+                                      DocumentReference adressRef = FirebaseFirestore.instance
+                                          .collection("Adresses")
+                                          .doc(FirebaseAuth.instance.currentUser!.uid);
+                                      DocumentReference petRef = FirebaseFirestore.instance
+                                          .collection("Pets")
                                           .doc(FirebaseAuth.instance.currentUser!.uid);
 
                                       QuerySnapshot adressSnapshot =
-                                          await collectionReference.collection("User Adress").get();
+                                          await adressRef.collection("User Adresses").get();
 
-                                      QuerySnapshot petSnapshot =
-                                          await collectionReference.collection("User Pets").get();
+                                      QuerySnapshot dogSnapshot =
+                                          await petRef.collection("Köpek").get();
+
+                                      QuerySnapshot catSnapshot =
+                                          await petRef.collection("Kedi").get();
+
                                       if (adressSnapshot.docs.isEmpty) {
                                         showCupertinoModalPopup(
                                           context: context,
@@ -190,7 +203,8 @@ class _AdvertizePageState extends State<AdvertizePage> {
                                             ],
                                           ),
                                         );
-                                      } else if (petSnapshot.docs.isEmpty) {
+                                      } else if (dogSnapshot.docs.isEmpty &&
+                                          catSnapshot.docs.isEmpty) {
                                         showCupertinoModalPopup(
                                           context: context,
                                           builder: (context) => CupertinoAlertDialog(
