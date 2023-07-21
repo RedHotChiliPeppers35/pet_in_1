@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/nightly/nightly_advertize.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/select_type_of_ad.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet/pet_add_page.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/main_page.dart';
 import 'package:flutter_application_1/Pages/constants.dart';
 import 'package:flutter_application_1/main.dart';
@@ -69,6 +70,7 @@ class _DailyAdvertizeState extends State<DailyAdvertize> {
       },
       child: Scaffold(
         appBar: AppBar(
+          title: const AdvertizeSelector(),
           leading: IconButton(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(
@@ -79,369 +81,339 @@ class _DailyAdvertizeState extends State<DailyAdvertize> {
           elevation: 0,
         ),
         body: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Center(
-                        child: AdvertizeSelector(),
-                      ),
-                      Row(
-                        children: [
-                          const Text("Lütfen adres seçin"),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          StreamBuilder(
+          child: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Builder(
+                    builder: (context) {
+                      if (listCounter == 2 || listCounter == 3) {
+                        return const Column(
+                          children: [
+                            PetCaller(),
+                            AdressCaller(),
+                          ],
+                        );
+                      } else {
+                        return Column(
+                          children: [
+                            StreamBuilder(
                               stream: FirebaseFirestore.instance
-                                  .collection("users")
+                                  .collection("pets")
                                   .doc(FirebaseAuth.instance.currentUser!.uid)
-                                  .collection("User Adress")
+                                  .collection("Köpek")
                                   .snapshots(),
                               builder:
-                                  (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (!snapshot.hasData) {
+                                  (BuildContext context, AsyncSnapshot<QuerySnapshot> dogSnapshot) {
+                                if (dogSnapshot.connectionState == ConnectionState.waiting) {
                                   return const CircularProgressIndicator.adaptive();
                                 } else {
-                                  return DropdownButton(
-                                    iconEnabledColor: applicationPurple,
-                                    iconDisabledColor: applicationOrange,
-                                    items: snapshot.data!.docs
-                                        .map(
-                                          (document) => DropdownMenuItem(
-                                            value: document["Title"],
-                                            child: Text(
-                                              document["Title"],
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                    value: selectedAdres,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        selectedAdres = newValue as String?;
-                                      });
-                                    },
+                                  return Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.9,
+                                        height: 100,
+                                        child: Center(
+                                            child: ListView.builder(
+                                          itemCount: 1,
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return Row(
+                                              children: [
+                                                PetCard(petSnapshot: dogSnapshot),
+                                              ],
+                                            );
+                                          },
+                                        )),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
                                   );
                                 }
-                              }),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Text("Lütfen dostunuzu seçin"),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(FirebaseAuth.instance.currentUser!.uid)
-                                .collection("User Pets")
-                                .snapshots(),
-                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) {
-                                return const CircularProgressIndicator.adaptive();
-                              } else {
-                                return DropdownButton(
-                                  iconEnabledColor: applicationPurple,
-                                  iconDisabledColor: applicationOrange,
-                                  items: snapshot.data!.docs
-                                      .map(
-                                        (document) => DropdownMenuItem(
-                                          value: document["Pet Name"],
-                                          child: Text(
-                                            document["Pet Name"],
-                                          ),
+                              },
+                            ),
+                            const AdressCaller()
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    height: 75,
+                    width: 300,
+                    child: HorizontalDatePickerWidget(
+                      normalTextColor: applicationPurple,
+                      selectedTextColor: applicationOrange,
+                      normalColor: Colors.white,
+                      selectedColor: applicationPurple,
+                      disabledColor: Colors.white,
+                      disabledTextColor: Colors.black38,
+                      locale: 'tr_TR',
+                      startDate: DateTime.now(),
+                      endDate: DateTime.now().add(const Duration(days: 7)),
+                      selectedDate: selectedDayStart!,
+                      widgetWidth: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      datePickerController: _datePickerController,
+                      onValueSelected: (date) {
+                        setState(() {
+                          selectedDayStart = date;
+                          selectedDayEnd = date;
+                          selectedStartTime = null;
+                          selectedEndTime = null;
+                        });
+                      },
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (selectedDayStart == null) {
+                        showIOSAlert(context, const Text("Lütfen tarih seçiniz"));
+                      } else {
+                        showCupertinoModalPopup(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              height: 300,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: applicationPurple.withAlpha(50),
+                                    ),
+                                    height: 150,
+                                    width: 150,
+                                    child: const TimePickerStart(),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedDayStart;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: 100,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: applicationPurple,
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Seç",
+                                          style: TextStyle(fontSize: 20, color: Colors.white),
                                         ),
-                                      )
-                                      .toList(),
-                                  value: selectedPet,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      selectedPet = newValue as String?;
-                                    });
-                                  },
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 300,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: applicationPurple),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Başlangıç zamanı seç",
+                            style: TextStyle(fontSize: 20, color: applicationOrange),
+                          ),
+                          Builder(
+                            builder: (context) {
+                              if (selectedStartTime == null) {
+                                return const Text("");
+                              } else {
+                                return Text(
+                                  getStartDate(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: applicationPurple),
                                 );
                               }
                             },
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  height: 75,
-                  width: 300,
-                  child: HorizontalDatePickerWidget(
-                    normalTextColor: applicationPurple,
-                    selectedTextColor: applicationOrange,
-                    normalColor: Colors.white,
-                    selectedColor: applicationPurple,
-                    disabledColor: Colors.white,
-                    disabledTextColor: Colors.black38,
-                    locale: 'tr_TR',
-                    startDate: DateTime.now(),
-                    endDate: DateTime.now().add(const Duration(days: 7)),
-                    selectedDate: selectedDayStart!,
-                    widgetWidth: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    datePickerController: _datePickerController,
-                    onValueSelected: (date) {
-                      setState(() {
-                        selectedDayStart = date;
-                        selectedDayEnd = date;
-                        selectedStartTime = null;
-                        selectedEndTime = null;
-                      });
-                    },
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (selectedDayStart == null) {
-                      showIOSAlert(context, const Text("Lütfen tarih seçiniz"));
-                    } else {
-                      showCupertinoModalPopup(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                            height: 300,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: applicationPurple.withAlpha(50),
-                                  ),
-                                  height: 150,
-                                  width: 150,
-                                  child: const TimePickerStart(),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedDayStart;
-                                    });
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: applicationPurple,
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Seç",
-                                        style: TextStyle(fontSize: 20, color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  },
-                  child: Container(
-                    height: 100,
-                    width: 300,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: applicationPurple),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Başlangıç zamanı seç",
-                          style: TextStyle(fontSize: 20, color: applicationOrange),
-                        ),
-                        Builder(
-                          builder: (context) {
-                            if (selectedStartTime == null) {
-                              return const Text("");
-                            } else {
-                              return Text(
-                                getStartDate(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: applicationPurple),
-                              );
-                            }
-                          },
-                        ),
-                      ],
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (selectedStartTime == null) {
-                      showIOSAlert(context, const Text("Lütfen başlangıç saati seçiniz"));
-                    } else {
-                      showCupertinoModalPopup(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                            height: 300,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: applicationPurple.withAlpha(50),
-                                  ),
-                                  height: 150,
-                                  width: 150,
-                                  child: const TimePickerEnd(),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedDayEnd;
-                                    });
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: applicationPurple,
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Seç",
-                                        style: TextStyle(fontSize: 20, color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    height: 100,
-                    width: 300,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: applicationPurple),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Bitiş zamanı seç ",
-                          style: TextStyle(fontSize: 20, color: applicationOrange),
-                        ),
-                        Builder(
-                          builder: (context) {
-                            if (selectedEndTime == null) {
-                              return const Text("");
-                            } else {
-                              return Text(
-                                getEndDate(),
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: applicationPurple),
-                              );
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const BudgetWidgetDaily(max: 200, min: 100),
-                TextButton(
-                    onPressed: () async {
-                      if (selectedDayStart == null || selectedDayEnd == null) {
-                        showIOSAlert(context, const Text("Başlangıç ve Bitiş zamanı seçiniz"));
-                      } else if (selectedPet == null || selectedAdres == null) {
-                        showIOSAlert(context, const Text("Lütfen adresinizi ve dostunuzu seçin"));
-                      } else if (selectedDayStart!.isBefore(selectedDayEnd!)) {
-                        final data = FirebaseFirestore.instance
-                            .collection("advertize")
-                            .doc(FirebaseAuth.instance.currentUser!.uid);
-                        if (listCounter == 2) {
-                          await data.collection("Daily on Pet Owner House").doc().set({
-                            "Adres": selectedAdres,
-                            "Pet": selectedPet,
-                            "Time-Start": selectedDayStart,
-                            "Time-End": selectedDayEnd,
-                            "ID": data.id
-                          });
-                        } else if (listCounter == 3) {
-                          await data.collection("Daily on Hosts House").doc().set({
-                            "Adres": selectedAdres,
-                            "Pet": selectedPet,
-                            "Time-Start": selectedDayStart,
-                            "Time-End": selectedDayEnd,
-                            "ID": data.id
-                          });
-                        } else if (listCounter == 4) {
-                          await data.collection("Dog Walking").doc().set({
-                            "Adres": selectedAdres,
-                            "Pet": selectedPet,
-                            "Time-Start": selectedDayStart,
-                            "Time-End": selectedDayEnd,
-                            "ID": data.id
-                          });
-                        }
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            CupertinoDialogRoute(
-                                builder: (context) => const MainPage(), context: context),
-                            (route) => false);
+                  GestureDetector(
+                    onTap: () {
+                      if (selectedStartTime == null) {
+                        showIOSAlert(context, const Text("Lütfen başlangıç saati seçiniz"));
                       } else {
-                        showIOSAlert(
-                            context, const Text("Bitiş saati, başlangıç saaatinden önce olamaz"));
+                        showCupertinoModalPopup(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              height: 300,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: applicationPurple.withAlpha(50),
+                                    ),
+                                    height: 150,
+                                    width: 150,
+                                    child: const TimePickerEnd(),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedDayEnd;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: 100,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: applicationPurple,
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Seç",
+                                          style: TextStyle(fontSize: 20, color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        );
                       }
                     },
                     child: Container(
-                      height: 50,
-                      width: 150,
+                      padding: const EdgeInsets.all(10),
+                      height: 100,
+                      width: 300,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: applicationOrange,
+                          border: Border.all(color: applicationPurple),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Bitiş zamanı seç ",
+                            style: TextStyle(fontSize: 20, color: applicationOrange),
+                          ),
+                          Builder(
+                            builder: (context) {
+                              if (selectedEndTime == null) {
+                                return const Text("");
+                              } else {
+                                return Text(
+                                  getEndDate(),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: applicationPurple),
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
-                      child: const Center(
-                        child: Text(
-                          "İlan ver",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                  const BudgetWidgetDaily(max: 200, min: 100),
+                  TextButton(
+                      onPressed: () async {
+                        if (selectedDayStart == null || selectedDayEnd == null) {
+                          showIOSAlert(context, const Text("Başlangıç ve Bitiş zamanı seçiniz"));
+                        } else if (selectedPet == null || selectedAdres == null) {
+                          showIOSAlert(context, const Text("Lütfen adresinizi ve dostunuzu seçin"));
+                        } else if (selectedDayStart!.isBefore(selectedDayEnd!)) {
+                          final data = FirebaseFirestore.instance
+                              .collection("advertize")
+                              .doc(FirebaseAuth.instance.currentUser!.uid);
+                          if (listCounter == 2) {
+                            await data.collection("Daily on Pet Owner House").doc().set({
+                              "Adres": selectedAdres,
+                              "Pet": selectedPet,
+                              "Time-Start": selectedDayStart,
+                              "Time-End": selectedDayEnd,
+                              "ID": data.id
+                            });
+                          } else if (listCounter == 3) {
+                            await data.collection("Daily on Hosts House").doc().set({
+                              "Adres": selectedAdres,
+                              "Pet": selectedPet,
+                              "Time-Start": selectedDayStart,
+                              "Time-End": selectedDayEnd,
+                              "ID": data.id
+                            });
+                          } else if (listCounter == 4) {
+                            await data.collection("Dog Walking").doc().set({
+                              "Adres": selectedAdres,
+                              "Pet": selectedPet,
+                              "Time-Start": selectedDayStart,
+                              "Time-End": selectedDayEnd,
+                              "ID": data.id
+                            });
+                          }
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              CupertinoDialogRoute(
+                                  builder: (context) => const MainPage(), context: context),
+                              (route) => false);
+                        } else {
+                          showIOSAlert(
+                              context, const Text("Bitiş saati, başlangıç saaatinden önce olamaz"));
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: applicationOrange,
                         ),
-                      ),
-                    ))
-              ],
+                        child: const Center(
+                          child: Text(
+                            "İlan ver",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ),
+                      ))
+                ],
+              ),
             ),
           ),
         ),

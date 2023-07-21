@@ -69,165 +69,129 @@ class _NightlyAdvertizeState extends State<NightlyAdvertize> {
         ),
         body: SafeArea(
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Builder(
-                  builder: (context) {
-                    if (listCounter == 0) {
-                      return const Column(
-                        children: [PetCaller()],
-                      );
-                    } else {
-                      return Column(
-                        children: [
-                          const PetCaller(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              const Text("Seçilen adres"),
-                              StreamBuilder(
-                                  stream: FirebaseFirestore.instance
-                                      .collection("adresses")
-                                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                                      .collection("User Adresses")
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> adressSnapshot) {
-                                    if (!adressSnapshot.hasData) {
-                                      return const CircularProgressIndicator.adaptive();
-                                    } else {
-                                      return Container(
-                                        height: 50,
-                                        width: 200,
-                                        child: CupertinoPicker(
-                                          backgroundColor: Colors.transparent,
-                                          itemExtent: 30,
-                                          onSelectedItemChanged: (value) {},
-                                          children: adressSnapshot.data!.docs
-                                              .map(
-                                                (document) => DropdownMenuItem(
-                                                    value: document["Title"],
-                                                    child: Center(
-                                                      child: Text(
-                                                        document["Title"],
-                                                      ),
-                                                    )),
-                                              )
-                                              .toList(),
-                                        ),
-                                      );
-                                    }
-                                  }),
-                            ],
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                ),
-                const Expanded(child: SizedBox()),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  height: 300,
-                  width: 350,
-                  child: SfDateRangePicker(
-                    rangeSelectionColor: applicationPurple,
-                    rangeTextStyle: const TextStyle(color: Colors.white),
-                    startRangeSelectionColor: applicationOrange,
-                    endRangeSelectionColor: applicationOrange,
-                    todayHighlightColor: applicationOrange,
-                    controller: _dateController,
-                    minDate: DateTime.now().subtract(const Duration(hours: 1)),
-                    onSelectionChanged: _onSelectionChanged,
-                    selectionMode: DateRangePickerSelectionMode.range,
-                    enablePastDates: false,
-                  ),
-                ),
-                const Expanded(child: SizedBox()),
-                const BudgetWidgetNightly(
-                  max: 450,
-                  min: 250,
-                ),
-                const Expanded(child: SizedBox()),
-                TextButton(
-                    onPressed: () async {
-                      var start = _dateController.selectedRange?.startDate;
-                      var end = _dateController.selectedRange?.endDate;
-                      if (end == null || start == null || end == start) {
-                        if (Platform.isIOS) {
-                          showIOSAlert(context,
-                              const Text("Tarihleri minimum 1 gece olacak şekilde seçiniz"));
+            child: SingleChildScrollView(
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Builder(
+                      builder: (context) {
+                        if (listCounter == 0) {
+                          return const Column(
+                            children: [PetCaller()],
+                          );
                         } else {
-                          showAndroidAlert(context,
-                              const Text("Tarihleri minimum 1 gece olacak şekilde seçiniz"));
+                          return Column(
+                            children: [const PetCaller(), AdressCaller()],
+                          );
                         }
-                      } else if (listCounter == 0 && selectedPet != null) {
-                        debugPrint("Bakıcı evinde konaklama");
-                        print(start);
-                        print(end);
+                      },
+                    ),
+                    const Expanded(child: SizedBox()),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      height: 300,
+                      width: 350,
+                      child: SfDateRangePicker(
+                        rangeSelectionColor: applicationPurple,
+                        rangeTextStyle: const TextStyle(color: Colors.white),
+                        startRangeSelectionColor: applicationOrange,
+                        endRangeSelectionColor: applicationOrange,
+                        todayHighlightColor: applicationOrange,
+                        controller: _dateController,
+                        minDate: DateTime.now().subtract(const Duration(hours: 1)),
+                        onSelectionChanged: _onSelectionChanged,
+                        selectionMode: DateRangePickerSelectionMode.range,
+                        enablePastDates: false,
+                      ),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    const BudgetWidgetNightly(
+                      max: 450,
+                      min: 250,
+                    ),
+                    const Expanded(child: SizedBox()),
+                    TextButton(
+                        onPressed: () async {
+                          var start = _dateController.selectedRange?.startDate;
+                          var end = _dateController.selectedRange?.endDate;
+                          if (end == null || start == null || end == start) {
+                            if (Platform.isIOS) {
+                              showIOSAlert(context,
+                                  const Text("Tarihleri minimum 1 gece olacak şekilde seçiniz"));
+                            } else {
+                              showAndroidAlert(context,
+                                  const Text("Tarihleri minimum 1 gece olacak şekilde seçiniz"));
+                            }
+                          } else if (listCounter == 0 && selectedPet != null) {
+                            debugPrint("Bakıcı evinde konaklama");
+                            print(start);
+                            print(end);
 
-                        final data = FirebaseFirestore.instance
-                            .collection("advertize")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .collection("Nightly on Hosts House")
-                            .doc();
+                            final data = FirebaseFirestore.instance
+                                .collection("advertize")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .collection("Nightly on Hosts House")
+                                .doc();
 
-                        await data.set({
-                          "Price": price,
-                          "Pet": selectedPet,
-                          "Time-Start": start,
-                          "Time-End": end,
-                          "ID": data.id
-                        });
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => const MainPage(),
-                            ));
-                      } else if (listCounter == 1 && selectedAdres != null && selectedPet != null) {
-                        debugPrint("Kendi evinde konaklama");
-                        print(start);
-                        print(end);
-                        final data = FirebaseFirestore.instance
-                            .collection("advertize")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .collection("Nightly on Pet Owners House")
-                            .doc();
+                            await data.set({
+                              "Price": price,
+                              "Pet": selectedPet,
+                              "Time-Start": start,
+                              "Time-End": end,
+                              "ID": data.id
+                            });
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => const MainPage(),
+                                ));
+                          } else if (listCounter == 1 &&
+                              selectedAdres != null &&
+                              selectedPet != null) {
+                            debugPrint("Kendi evinde konaklama");
+                            print(start);
+                            print(end);
+                            final data = FirebaseFirestore.instance
+                                .collection("advertize")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .collection("Nightly on Pet Owners House")
+                                .doc();
 
-                        await data.set({
-                          "Price": price,
-                          "Pet": selectedPet,
-                          "Adress": selectedAdres,
-                          "Time-Start": start,
-                          "Time-End": end,
-                          "ID": data.id
-                        });
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => const MainPage(),
-                            ));
-                      }
-                    },
-                    child: Container(
-                        height: 40,
-                        width: 150,
-                        decoration: BoxDecoration(
-                            color: applicationOrange, borderRadius: BorderRadius.circular(20)),
-                        child: const Center(
-                            child: Text(
-                          "İlan Ver",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        )))),
-                const Expanded(child: SizedBox()),
-              ],
+                            await data.set({
+                              "Price": price,
+                              "Pet": selectedPet,
+                              "Adress": selectedAdres,
+                              "Time-Start": start,
+                              "Time-End": end,
+                              "ID": data.id
+                            });
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => const MainPage(),
+                                ));
+                          }
+                        },
+                        child: Container(
+                            height: 40,
+                            width: 150,
+                            decoration: BoxDecoration(
+                                color: applicationOrange, borderRadius: BorderRadius.circular(20)),
+                            child: const Center(
+                                child: Text(
+                              "İlan Ver",
+                              style: TextStyle(fontSize: 20, color: Colors.white),
+                            )))),
+                    const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -438,6 +402,58 @@ class _PetCardState extends State<PetCard> {
           );
         },
       ).toList(),
+    );
+  }
+}
+
+class AdressCaller extends StatefulWidget {
+  const AdressCaller({super.key});
+
+  @override
+  State<AdressCaller> createState() => _AdressCallerState();
+}
+
+class _AdressCallerState extends State<AdressCaller> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        const Text("Seçilen adres:"),
+        StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("adresses")
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .collection("User Adresses")
+                .snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> adressSnapshot) {
+              if (!adressSnapshot.hasData) {
+                return const CircularProgressIndicator.adaptive();
+              } else {
+                return Container(
+                  height: 50,
+                  width: 150,
+                  child: CupertinoPicker(
+                    selectionOverlay: null,
+                    backgroundColor: Colors.transparent,
+                    itemExtent: 30,
+                    onSelectedItemChanged: (value) {},
+                    children: adressSnapshot.data!.docs
+                        .map(
+                          (document) => DropdownMenuItem(
+                              value: document["Title"],
+                              child: Center(
+                                child: Text(
+                                  document["Title"],
+                                ),
+                              )),
+                        )
+                        .toList(),
+                  ),
+                );
+              }
+            }),
+      ],
     );
   }
 }

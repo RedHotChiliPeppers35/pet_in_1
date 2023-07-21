@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/daily/daily_advertize.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Advertize/nightly/nightly_advertize.dart';
 import 'package:flutter_application_1/Pages/Pet%20Owner/Main%20Page/list_view_page.dart';
+import 'package:flutter_application_1/Pages/Pet%20Owner/Profile%20Page/pet/pet_add_page.dart';
 
 int listCounter = 0;
 
@@ -186,33 +189,92 @@ class _SelectTypeOfAdvertizeState extends State<SelectTypeOfAdvertize> {
                           height: 20,
                           color: Colors.black,
                         ),
-                        TextButton(
-                            statesController: bakiciController,
-                            onPressed: () {
-                              listCounter = 4;
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) {
-                                    return const DailyAdvertize();
-                                  },
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("pets")
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .collection("Köpek")
+                              .snapshots(),
+                          builder:
+                              (BuildContext context, AsyncSnapshot<QuerySnapshot> dogSnapshot) {
+                            if (dogSnapshot.data!.docs.isNotEmpty) {
+                              return TextButton(
+                                statesController: bakiciController,
+                                onPressed: () {
+                                  listCounter = 4;
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) {
+                                        return const DailyAdvertize();
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Köpek gezdirme",
+                                      style: TextStyle(fontSize: 17, color: Colors.black87),
+                                    ),
+                                    Text(
+                                      "Bakıcı belirlediğiniz saatlerde köpeğinizi yürüyüşe çıkartacak.",
+                                      style: TextStyle(fontSize: 12, color: Colors.black45),
+                                    ),
+                                  ],
                                 ),
                               );
-                            },
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Köpek gezdirme",
-                                  style: TextStyle(fontSize: 17, color: Colors.black87),
+                            } else {
+                              return TextButton(
+                                statesController: bakiciController,
+                                onPressed: () {
+                                  listCounter = 4;
+                                  showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (context) => CupertinoAlertDialog(
+                                      content: const Text(
+                                          "Köpek eklemeden yürüyüş için ilan veremezsiniz",
+                                          style: TextStyle(fontSize: 18)),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              CupertinoDialogRoute(
+                                                  builder: (context) => const PetAddPage(),
+                                                  context: context),
+                                            );
+                                          },
+                                          child: const Text(
+                                            "Köpek Ekle",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Köpek gezdirme",
+                                      style: TextStyle(fontSize: 17, color: Colors.black87),
+                                    ),
+                                    Text(
+                                      "Bakıcı belirlediğiniz saatlerde köpeğinizi yürüyüşe çıkartacak.",
+                                      style: TextStyle(fontSize: 12, color: Colors.black45),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "Bakıcı belirlediğiniz saatlerde köpeğinizi yürüyüşe çıkartacak.",
-                                  style: TextStyle(fontSize: 12, color: Colors.black45),
-                                ),
-                              ],
-                            )),
+                              );
+                            }
+                          },
+                        )
                       ],
                     ),
                     const SizedBox(
@@ -285,7 +347,7 @@ class AdvertizeSelector extends StatelessWidget {
   const AdvertizeSelector({super.key});
 
   final TextStyle myStyle =
-      const TextStyle(fontSize: 23, fontWeight: FontWeight.bold, color: Colors.black);
+      const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black);
 
   @override
   Widget build(BuildContext context) {
