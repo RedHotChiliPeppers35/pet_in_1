@@ -347,7 +347,7 @@ class AdvertizeSelector extends StatelessWidget {
   const AdvertizeSelector({super.key});
 
   final TextStyle myStyle =
-      const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black);
+      const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
 
   @override
   Widget build(BuildContext context) {

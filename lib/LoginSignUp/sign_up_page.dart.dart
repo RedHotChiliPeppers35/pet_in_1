@@ -711,11 +711,18 @@ class _SignUpPageState extends State<SignUpPage> {
                             onPressed: () {},
                             child: const Text(
                               "Koşulları",
-                              style: TextStyle(decoration: TextDecoration.underline),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                           Text(
-                            style: TextStyle(color: applicationOrange),
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: applicationOrange,
+                            ),
                             "okudum, kabul ediyorum",
                           )
                         ],
@@ -733,7 +740,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: TextButton(
                         onPressed: () {},
                         child: Text(
-                          style: TextStyle(color: applicationOrange),
+                          style: TextStyle(
+                            color: applicationOrange,
+                            fontSize: 15,
+                          ),
                           "E-posta ile gelişmelerden haberdar olmak istiyorum",
                         ),
                       ),

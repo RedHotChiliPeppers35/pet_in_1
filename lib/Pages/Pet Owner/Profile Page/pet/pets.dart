@@ -65,502 +65,689 @@ class _PetsPageState extends State<PetsPage> {
                 stream: FirebaseFirestore.instance
                     .collection("pets")
                     .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .collection("Kuş")
+                    .collection("Hamster")
                     .snapshots(),
-                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> birdSnapshot) {
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> hamsterSnapshot) {
                   return StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection("pets")
                           .doc(FirebaseAuth.instance.currentUser!.uid)
-                          .collection("Kedi")
+                          .collection("Kuş")
                           .snapshots(),
-                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> catSnapshot) {
+                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> birdSnapshot) {
                         return StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection("pets")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .collection("Köpek")
-                              .snapshots(),
-                          builder:
-                              (BuildContext context, AsyncSnapshot<QuerySnapshot> dogSnapshot) {
-                            if (!dogSnapshot.hasData) {
-                              return const CircularProgressIndicator.adaptive();
-                            } else {
-                              if (dogSnapshot.data!.docs.isEmpty &&
-                                  catSnapshot.data!.docs.isEmpty &&
-                                  birdSnapshot.data!.docs.isEmpty) {
-                                return SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.5,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Column(
+                            stream: FirebaseFirestore.instance
+                                .collection("pets")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .collection("Kedi")
+                                .snapshots(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot<QuerySnapshot> catSnapshot) {
+                              return StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection("pets")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .collection("Köpek")
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> dogSnapshot) {
+                                  if (!dogSnapshot.hasData) {
+                                    return const CircularProgressIndicator.adaptive();
+                                  } else {
+                                    if (dogSnapshot.data!.docs.isEmpty &&
+                                        catSnapshot.data!.docs.isEmpty &&
+                                        birdSnapshot.data!.docs.isEmpty) {
+                                      return SizedBox(
+                                        height: MediaQuery.of(context).size.height * 0.5,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Icon(
+                                                  Icons.pets,
+                                                  size: 50,
+                                                  color: applicationOrange,
+                                                ),
+                                                const SizedBox(
+                                                  height: 20,
+                                                ),
+                                                const Text(
+                                                  "Henüz bir dostun gözükmüyor",
+                                                  style: TextStyle(fontSize: 20),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 30,
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  CupertinoModalPopupRoute(
+                                                    builder: (context) {
+                                                      return const PetAddPage();
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                              child: const Text(
+                                                "Dost ekle",
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      return Column(
                                         children: [
-                                          Icon(
-                                            Icons.pets,
-                                            size: 50,
-                                            color: applicationOrange,
+                                          ListView(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            children: dogSnapshot.data!.docs.map((document) {
+                                              return Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        color: applicationPurple.withAlpha(100),
+                                                        borderRadius: BorderRadius.circular(20)),
+                                                    height: 200,
+                                                    width: MediaQuery.of(context).size.width * 0.9,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Row(
+                                                            children: [
+                                                              dogSnapshot.connectionState !=
+                                                                      ConnectionState.waiting
+                                                                  ? Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(8.0),
+                                                                      child: CircleAvatar(
+                                                                        backgroundColor:
+                                                                            Colors.transparent,
+                                                                        radius: 40,
+                                                                        backgroundImage:
+                                                                            NetworkImage(document[
+                                                                                "Pet Photo URL"]),
+                                                                      ),
+                                                                    )
+                                                                  : const Padding(
+                                                                      padding: EdgeInsets.all(8.0),
+                                                                      child:
+                                                                          CircularProgressIndicator
+                                                                              .adaptive(),
+                                                                    ),
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment.spaceAround,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      document["Pet Name"],
+                                                                      style: const TextStyle(
+                                                                          fontSize: 25,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 50,
+                                                                    ),
+                                                                    Text(
+                                                                      "${document["Pet Age"]} yaşında ",
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    ),
+                                                                    Text(
+                                                                      "Türü: ${document["Pet Kind"]}",
+                                                                      style: const TextStyle(
+                                                                        fontSize: 17,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      "Irk: ${document["Pet Race"]}",
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    ),
+                                                                    Text(
+                                                                      "Not: ${document["Pet Alert"]}",
+                                                                      maxLines: 5,
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            showCupertinoModalPopup(
+                                                                context: context,
+                                                                builder: (BuildContext context) =>
+                                                                    CupertinoAlertDialog(
+                                                                        title: const Text(
+                                                                            "Dostunu silmek istediğine emin misin ?"),
+                                                                        actions: <CupertinoDialogAction>[
+                                                                          CupertinoDialogAction(
+                                                                            isDefaultAction: true,
+                                                                            onPressed: () {
+                                                                              Navigator.pop(
+                                                                                  context);
+                                                                            },
+                                                                            child: const Text(
+                                                                                'Vazgeç'),
+                                                                          ),
+                                                                          CupertinoDialogAction(
+                                                                            isDefaultAction: true,
+                                                                            onPressed: () async {
+                                                                              await FirebaseFirestore
+                                                                                  .instance
+                                                                                  .collection(
+                                                                                      "pets")
+                                                                                  .doc(FirebaseAuth
+                                                                                      .instance
+                                                                                      .currentUser!
+                                                                                      .uid)
+                                                                                  .collection(
+                                                                                      "Köpek")
+                                                                                  .doc(document.id)
+                                                                                  .delete()
+                                                                                  .then((value) =>
+                                                                                      Navigator.pop(
+                                                                                          context));
+                                                                            },
+                                                                            child: const Text(
+                                                                              'Sil',
+                                                                              style: TextStyle(
+                                                                                  color:
+                                                                                      Colors.red),
+                                                                            ),
+                                                                          ),
+                                                                        ]));
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            size: 30,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  )
+                                                ],
+                                              );
+                                            }).toList(),
                                           ),
-                                          const SizedBox(
-                                            height: 20,
+                                          ListView(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            children: catSnapshot.data!.docs.map((document) {
+                                              return Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        color: applicationPurple.withAlpha(100),
+                                                        borderRadius: BorderRadius.circular(20)),
+                                                    height: 200,
+                                                    width: MediaQuery.of(context).size.width * 0.9,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Row(
+                                                            children: [
+                                                              catSnapshot.connectionState !=
+                                                                      ConnectionState.waiting
+                                                                  ? Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(8.0),
+                                                                      child: CircleAvatar(
+                                                                        backgroundColor:
+                                                                            Colors.transparent,
+                                                                        radius: 40,
+                                                                        backgroundImage:
+                                                                            NetworkImage(document[
+                                                                                "Pet Photo URL"]),
+                                                                      ),
+                                                                    )
+                                                                  : const Padding(
+                                                                      padding: EdgeInsets.all(8.0),
+                                                                      child:
+                                                                          CircularProgressIndicator
+                                                                              .adaptive(),
+                                                                    ),
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment.spaceAround,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      document["Pet Name"],
+                                                                      style: const TextStyle(
+                                                                          fontSize: 25,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 50,
+                                                                    ),
+                                                                    Text(
+                                                                      "${document["Pet Age"]} yaşında ",
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    ),
+                                                                    Text(
+                                                                      "Türü: ${document["Pet Kind"]}",
+                                                                      style: const TextStyle(
+                                                                        fontSize: 17,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      "Irk: ${document["Pet Race"]}",
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    ),
+                                                                    Text(
+                                                                      "Not: ${document["Pet Alert"]}",
+                                                                      maxLines: 5,
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            showCupertinoModalPopup(
+                                                                context: context,
+                                                                builder: (BuildContext context) =>
+                                                                    CupertinoAlertDialog(
+                                                                        title: const Text(
+                                                                            "Dostunu silmek istediğine emin misin ?"),
+                                                                        actions: <CupertinoDialogAction>[
+                                                                          CupertinoDialogAction(
+                                                                            isDefaultAction: true,
+                                                                            onPressed: () {
+                                                                              Navigator.pop(
+                                                                                  context);
+                                                                            },
+                                                                            child: const Text(
+                                                                                'Vazgeç'),
+                                                                          ),
+                                                                          CupertinoDialogAction(
+                                                                            isDefaultAction: true,
+                                                                            onPressed: () async {
+                                                                              await FirebaseFirestore
+                                                                                  .instance
+                                                                                  .collection(
+                                                                                      "pets")
+                                                                                  .doc(FirebaseAuth
+                                                                                      .instance
+                                                                                      .currentUser!
+                                                                                      .uid)
+                                                                                  .collection(
+                                                                                      "Kedi")
+                                                                                  .doc(document.id)
+                                                                                  .delete()
+                                                                                  .then((value) =>
+                                                                                      Navigator.pop(
+                                                                                          context));
+                                                                            },
+                                                                            child: const Text(
+                                                                              'Sil',
+                                                                              style: TextStyle(
+                                                                                  color:
+                                                                                      Colors.red),
+                                                                            ),
+                                                                          ),
+                                                                        ]));
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            size: 30,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  )
+                                                ],
+                                              );
+                                            }).toList(),
                                           ),
-                                          const Text(
-                                            "Henüz bir dostun gözükmüyor",
-                                            style: TextStyle(fontSize: 20),
+                                          ListView(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            children: birdSnapshot.data!.docs.map((document) {
+                                              return Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        color: applicationPurple.withAlpha(100),
+                                                        borderRadius: BorderRadius.circular(20)),
+                                                    height: 200,
+                                                    width: MediaQuery.of(context).size.width * 0.9,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Row(
+                                                            children: [
+                                                              birdSnapshot.connectionState !=
+                                                                      ConnectionState.waiting
+                                                                  ? Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(8.0),
+                                                                      child: CircleAvatar(
+                                                                        backgroundColor:
+                                                                            Colors.transparent,
+                                                                        radius: 40,
+                                                                        backgroundImage:
+                                                                            NetworkImage(document[
+                                                                                "Pet Photo URL"]),
+                                                                      ),
+                                                                    )
+                                                                  : const Padding(
+                                                                      padding: EdgeInsets.all(8.0),
+                                                                      child:
+                                                                          CircularProgressIndicator
+                                                                              .adaptive(),
+                                                                    ),
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment.spaceAround,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      document["Pet Name"],
+                                                                      style: const TextStyle(
+                                                                          fontSize: 25,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 50,
+                                                                    ),
+                                                                    Text(
+                                                                      "${document["Pet Age"]} yaşında ",
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    ),
+                                                                    Text(
+                                                                      "Türü: ${document["Pet Kind"]}",
+                                                                      style: const TextStyle(
+                                                                        fontSize: 17,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      "Irk: ${document["Pet Race"]}",
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    ),
+                                                                    Text(
+                                                                      "Not: ${document["Pet Alert"]}",
+                                                                      maxLines: 5,
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            showCupertinoModalPopup(
+                                                                context: context,
+                                                                builder: (BuildContext context) =>
+                                                                    CupertinoAlertDialog(
+                                                                        title: const Text(
+                                                                            "Dostunu silmek istediğine emin misin ?"),
+                                                                        actions: <CupertinoDialogAction>[
+                                                                          CupertinoDialogAction(
+                                                                            isDefaultAction: true,
+                                                                            onPressed: () {
+                                                                              Navigator.pop(
+                                                                                  context);
+                                                                            },
+                                                                            child: const Text(
+                                                                                'Vazgeç'),
+                                                                          ),
+                                                                          CupertinoDialogAction(
+                                                                            isDefaultAction: true,
+                                                                            onPressed: () async {
+                                                                              await FirebaseFirestore
+                                                                                  .instance
+                                                                                  .collection(
+                                                                                      "pets")
+                                                                                  .doc(FirebaseAuth
+                                                                                      .instance
+                                                                                      .currentUser!
+                                                                                      .uid)
+                                                                                  .collection("Kuş")
+                                                                                  .doc(document.id)
+                                                                                  .delete()
+                                                                                  .then((value) =>
+                                                                                      Navigator.pop(
+                                                                                          context));
+                                                                            },
+                                                                            child: const Text(
+                                                                              'Sil',
+                                                                              style: TextStyle(
+                                                                                  color:
+                                                                                      Colors.red),
+                                                                            ),
+                                                                          ),
+                                                                        ]));
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            size: 30,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  )
+                                                ],
+                                              );
+                                            }).toList(),
+                                          ),
+                                          ListView(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            children: hamsterSnapshot.data!.docs.map((document) {
+                                              return Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        color: applicationPurple.withAlpha(100),
+                                                        borderRadius: BorderRadius.circular(20)),
+                                                    height: 200,
+                                                    width: MediaQuery.of(context).size.width * 0.9,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Row(
+                                                            children: [
+                                                              hamsterSnapshot.connectionState !=
+                                                                      ConnectionState.waiting
+                                                                  ? Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(8.0),
+                                                                      child: CircleAvatar(
+                                                                        backgroundColor:
+                                                                            Colors.transparent,
+                                                                        radius: 40,
+                                                                        backgroundImage:
+                                                                            NetworkImage(document[
+                                                                                "Pet Photo URL"]),
+                                                                      ),
+                                                                    )
+                                                                  : const Padding(
+                                                                      padding: EdgeInsets.all(8.0),
+                                                                      child:
+                                                                          CircularProgressIndicator
+                                                                              .adaptive(),
+                                                                    ),
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment.spaceAround,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      document["Pet Name"],
+                                                                      style: const TextStyle(
+                                                                          fontSize: 25,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 50,
+                                                                    ),
+                                                                    Text(
+                                                                      "${document["Pet Age"]} yaşında ",
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    ),
+                                                                    Text(
+                                                                      "Türü: ${document["Pet Kind"]}",
+                                                                      style: const TextStyle(
+                                                                        fontSize: 17,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      "Irk: ${document["Pet Race"]}",
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    ),
+                                                                    Text(
+                                                                      "Not: ${document["Pet Alert"]}",
+                                                                      maxLines: 5,
+                                                                      style: const TextStyle(
+                                                                          fontSize: 17),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            showCupertinoModalPopup(
+                                                                context: context,
+                                                                builder: (BuildContext context) =>
+                                                                    CupertinoAlertDialog(
+                                                                        title: const Text(
+                                                                            "Dostunu silmek istediğine emin misin ?"),
+                                                                        actions: <CupertinoDialogAction>[
+                                                                          CupertinoDialogAction(
+                                                                            isDefaultAction: true,
+                                                                            onPressed: () {
+                                                                              Navigator.pop(
+                                                                                  context);
+                                                                            },
+                                                                            child: const Text(
+                                                                                'Vazgeç'),
+                                                                          ),
+                                                                          CupertinoDialogAction(
+                                                                            isDefaultAction: true,
+                                                                            onPressed: () async {
+                                                                              await FirebaseFirestore
+                                                                                  .instance
+                                                                                  .collection(
+                                                                                      "pets")
+                                                                                  .doc(FirebaseAuth
+                                                                                      .instance
+                                                                                      .currentUser!
+                                                                                      .uid)
+                                                                                  .collection("Kuş")
+                                                                                  .doc(document.id)
+                                                                                  .delete()
+                                                                                  .then((value) =>
+                                                                                      Navigator.pop(
+                                                                                          context));
+                                                                            },
+                                                                            child: const Text(
+                                                                              'Sil',
+                                                                              style: TextStyle(
+                                                                                  color:
+                                                                                      Colors.red),
+                                                                            ),
+                                                                          ),
+                                                                        ]));
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            size: 30,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  )
+                                                ],
+                                              );
+                                            }).toList(),
                                           ),
                                         ],
-                                      ),
-                                      const SizedBox(
-                                        height: 30,
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            CupertinoModalPopupRoute(
-                                              builder: (context) {
-                                                return const PetAddPage();
-                                              },
-                                            ),
-                                          );
-                                        },
-                                        child: const Text(
-                                          "Dost ekle",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return Column(
-                                  children: [
-                                    ListView(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      children: dogSnapshot.data!.docs.map((document) {
-                                        return Column(
-                                          children: [
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: applicationPurple.withAlpha(100),
-                                                  borderRadius: BorderRadius.circular(20)),
-                                              height: 200,
-                                              width: MediaQuery.of(context).size.width * 0.9,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Row(
-                                                      children: [
-                                                        dogSnapshot.connectionState !=
-                                                                ConnectionState.waiting
-                                                            ? Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: CircleAvatar(
-                                                                  backgroundColor:
-                                                                      Colors.transparent,
-                                                                  radius: 40,
-                                                                  backgroundImage: NetworkImage(
-                                                                      document["Pet Photo URL"]),
-                                                                ),
-                                                              )
-                                                            : const Padding(
-                                                                padding: EdgeInsets.all(8.0),
-                                                                child: CircularProgressIndicator
-                                                                    .adaptive(),
-                                                              ),
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment.spaceAround,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment.start,
-                                                            children: [
-                                                              Text(
-                                                                document["Pet Name"],
-                                                                style: const TextStyle(
-                                                                    fontSize: 25,
-                                                                    fontWeight: FontWeight.bold),
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 50,
-                                                              ),
-                                                              Text(
-                                                                "${document["Pet Age"]} yaşında ",
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              ),
-                                                              Text(
-                                                                "Türü: ${document["Pet Kind"]}",
-                                                                style: const TextStyle(
-                                                                  fontSize: 17,
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                "Irk: ${document["Pet Race"]}",
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              ),
-                                                              Text(
-                                                                "Not: ${document["Pet Alert"]}",
-                                                                maxLines: 5,
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      showCupertinoModalPopup(
-                                                          context: context,
-                                                          builder: (BuildContext context) =>
-                                                              CupertinoAlertDialog(
-                                                                  title: const Text(
-                                                                      "Dostunu silmek istediğine emin misin ?"),
-                                                                  actions: <CupertinoDialogAction>[
-                                                                    CupertinoDialogAction(
-                                                                      isDefaultAction: true,
-                                                                      onPressed: () {
-                                                                        Navigator.pop(context);
-                                                                      },
-                                                                      child: const Text('Vazgeç'),
-                                                                    ),
-                                                                    CupertinoDialogAction(
-                                                                      isDefaultAction: true,
-                                                                      onPressed: () async {
-                                                                        await FirebaseFirestore
-                                                                            .instance
-                                                                            .collection("pets")
-                                                                            .doc(FirebaseAuth
-                                                                                .instance
-                                                                                .currentUser!
-                                                                                .uid)
-                                                                            .collection("Köpek")
-                                                                            .doc(document.id)
-                                                                            .delete()
-                                                                            .then((value) =>
-                                                                                Navigator.pop(
-                                                                                    context));
-                                                                      },
-                                                                      child: const Text(
-                                                                        'Sil',
-                                                                        style: TextStyle(
-                                                                            color: Colors.red),
-                                                                      ),
-                                                                    ),
-                                                                  ]));
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.delete,
-                                                      size: 30,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            )
-                                          ],
-                                        );
-                                      }).toList(),
-                                    ),
-                                    ListView(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      children: catSnapshot.data!.docs.map((document) {
-                                        return Column(
-                                          children: [
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: applicationPurple.withAlpha(100),
-                                                  borderRadius: BorderRadius.circular(20)),
-                                              height: 200,
-                                              width: MediaQuery.of(context).size.width * 0.9,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Row(
-                                                      children: [
-                                                        catSnapshot.connectionState !=
-                                                                ConnectionState.waiting
-                                                            ? Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: CircleAvatar(
-                                                                  backgroundColor:
-                                                                      Colors.transparent,
-                                                                  radius: 40,
-                                                                  backgroundImage: NetworkImage(
-                                                                      document["Pet Photo URL"]),
-                                                                ),
-                                                              )
-                                                            : const Padding(
-                                                                padding: EdgeInsets.all(8.0),
-                                                                child: CircularProgressIndicator
-                                                                    .adaptive(),
-                                                              ),
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment.spaceAround,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment.start,
-                                                            children: [
-                                                              Text(
-                                                                document["Pet Name"],
-                                                                style: const TextStyle(
-                                                                    fontSize: 25,
-                                                                    fontWeight: FontWeight.bold),
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 50,
-                                                              ),
-                                                              Text(
-                                                                "${document["Pet Age"]} yaşında ",
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              ),
-                                                              Text(
-                                                                "Türü: ${document["Pet Kind"]}",
-                                                                style: const TextStyle(
-                                                                  fontSize: 17,
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                "Irk: ${document["Pet Race"]}",
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              ),
-                                                              Text(
-                                                                "Not: ${document["Pet Alert"]}",
-                                                                maxLines: 5,
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      showCupertinoModalPopup(
-                                                          context: context,
-                                                          builder: (BuildContext context) =>
-                                                              CupertinoAlertDialog(
-                                                                  title: const Text(
-                                                                      "Dostunu silmek istediğine emin misin ?"),
-                                                                  actions: <CupertinoDialogAction>[
-                                                                    CupertinoDialogAction(
-                                                                      isDefaultAction: true,
-                                                                      onPressed: () {
-                                                                        Navigator.pop(context);
-                                                                      },
-                                                                      child: const Text('Vazgeç'),
-                                                                    ),
-                                                                    CupertinoDialogAction(
-                                                                      isDefaultAction: true,
-                                                                      onPressed: () async {
-                                                                        await FirebaseFirestore
-                                                                            .instance
-                                                                            .collection("pets")
-                                                                            .doc(FirebaseAuth
-                                                                                .instance
-                                                                                .currentUser!
-                                                                                .uid)
-                                                                            .collection("Kedi")
-                                                                            .doc(document.id)
-                                                                            .delete()
-                                                                            .then((value) =>
-                                                                                Navigator.pop(
-                                                                                    context));
-                                                                      },
-                                                                      child: const Text(
-                                                                        'Sil',
-                                                                        style: TextStyle(
-                                                                            color: Colors.red),
-                                                                      ),
-                                                                    ),
-                                                                  ]));
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.delete,
-                                                      size: 30,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            )
-                                          ],
-                                        );
-                                      }).toList(),
-                                    ),
-                                    ListView(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      children: birdSnapshot.data!.docs.map((document) {
-                                        return Column(
-                                          children: [
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: applicationPurple.withAlpha(100),
-                                                  borderRadius: BorderRadius.circular(20)),
-                                              height: 200,
-                                              width: MediaQuery.of(context).size.width * 0.9,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Row(
-                                                      children: [
-                                                        birdSnapshot.connectionState !=
-                                                                ConnectionState.waiting
-                                                            ? Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: CircleAvatar(
-                                                                  backgroundColor:
-                                                                      Colors.transparent,
-                                                                  radius: 40,
-                                                                  backgroundImage: NetworkImage(
-                                                                      document["Pet Photo URL"]),
-                                                                ),
-                                                              )
-                                                            : const Padding(
-                                                                padding: EdgeInsets.all(8.0),
-                                                                child: CircularProgressIndicator
-                                                                    .adaptive(),
-                                                              ),
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment.spaceAround,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment.start,
-                                                            children: [
-                                                              Text(
-                                                                document["Pet Name"],
-                                                                style: const TextStyle(
-                                                                    fontSize: 25,
-                                                                    fontWeight: FontWeight.bold),
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 50,
-                                                              ),
-                                                              Text(
-                                                                "${document["Pet Age"]} yaşında ",
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              ),
-                                                              Text(
-                                                                "Türü: ${document["Pet Kind"]}",
-                                                                style: const TextStyle(
-                                                                  fontSize: 17,
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                "Irk: ${document["Pet Race"]}",
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              ),
-                                                              Text(
-                                                                "Not: ${document["Pet Alert"]}",
-                                                                maxLines: 5,
-                                                                style:
-                                                                    const TextStyle(fontSize: 17),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      showCupertinoModalPopup(
-                                                          context: context,
-                                                          builder: (BuildContext context) =>
-                                                              CupertinoAlertDialog(
-                                                                  title: const Text(
-                                                                      "Dostunu silmek istediğine emin misin ?"),
-                                                                  actions: <CupertinoDialogAction>[
-                                                                    CupertinoDialogAction(
-                                                                      isDefaultAction: true,
-                                                                      onPressed: () {
-                                                                        Navigator.pop(context);
-                                                                      },
-                                                                      child: const Text('Vazgeç'),
-                                                                    ),
-                                                                    CupertinoDialogAction(
-                                                                      isDefaultAction: true,
-                                                                      onPressed: () async {
-                                                                        await FirebaseFirestore
-                                                                            .instance
-                                                                            .collection("pets")
-                                                                            .doc(FirebaseAuth
-                                                                                .instance
-                                                                                .currentUser!
-                                                                                .uid)
-                                                                            .collection("Kuş")
-                                                                            .doc(document.id)
-                                                                            .delete()
-                                                                            .then((value) =>
-                                                                                Navigator.pop(
-                                                                                    context));
-                                                                      },
-                                                                      child: const Text(
-                                                                        'Sil',
-                                                                        style: TextStyle(
-                                                                            color: Colors.red),
-                                                                      ),
-                                                                    ),
-                                                                  ]));
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.delete,
-                                                      size: 30,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            )
-                                          ],
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ],
-                                );
-                              }
-                            }
-                          },
-                        );
+                                      );
+                                    }
+                                  }
+                                },
+                              );
+                            });
                       });
                 }),
           ),
